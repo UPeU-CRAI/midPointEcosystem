@@ -1,0 +1,26 @@
+version: "3.4"
+name: sistema_crm
+services:
+  postgresql:
+    image: postgres:13-alpine
+    container_name: crm_db
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=qwe123
+      - POSTGRES_USER=crm
+      - POSTGRES_INITDB_ARGS=--lc-collate=en_US.utf8 --lc-ctype=en_US.utf8
+    ports:
+      - 5435:5432
+    networks:
+      - crm_net
+    volumes:
+      - crm_db_data:/var/lib/postgresql/data
+      - ./scripts-db/crm:/docker-entrypoint-initdb.d/:ro
+
+networks:
+  crm_net:    
+    driver: bridge
+
+volumes:
+  crm_db_data:
+    name: crm_db_data

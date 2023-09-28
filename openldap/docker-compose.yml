@@ -1,0 +1,46 @@
+version: "3.4"
+name: ldap_directorio
+services:
+  openldap:
+    image: osixia/openldap:latest
+    container_name: openldap_server
+    entrypoint: [ "/container/tool/run", "--copy-service" ]
+    ports:
+      - "389:389"
+    environment:
+      LDAP_ORGANISATION: Universidad Peruana Unión
+      LDAP_DOMAIN: upeu.edu.pe
+      LDAP_ADMIN_PASSWORD: secret
+      LDAP_TLS: false
+    volumes:
+      - ldap_data:/etc/ldap/slapd.d
+      - ldap_data:/var/lib/ldap
+      - ./container-ldap_files:/container/service/slapd/assets/config/bootstrap/ldif/custom/:ro
+    networks:
+      - openldap_net
+
+  phpldapadmin:
+    image: osixia/phpldapadmin:latest
+    container_name: phpldapadmin
+    environment:
+      PHPLDAPADMIN_LDAP_HOSTS: openldap
+      PHPLDAPADMIN_HTTPS: false
+    ports:
+      - "8081:80"
+    depends_on:
+      - openldap
+    volumes:
+      - phpldapadmin_data:/var/lib/phpldapadmin
+      - phpldapadmin_data:/var/www/phpldapadmin
+    networks:
+      - openldap_net
+
+volumes:
+  ldap_data:
+    name: ldap_data
+  phpldapadmin_data:
+    name: phpldapadmin_data
+
+networks:
+  openldap_net:
+    driver: bridge

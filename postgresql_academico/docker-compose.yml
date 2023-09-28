@@ -1,0 +1,26 @@
+version: "3.4"
+name: sistema_academico
+services:
+  postgresql:
+    image: postgres:13-alpine
+    container_name: academico_db
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=qwe123
+      - POSTGRES_USER=academico
+      - POSTGRES_INITDB_ARGS=--lc-collate=en_US.utf8 --lc-ctype=en_US.utf8
+    ports:
+      - 5433:5432
+    networks:
+      - academico_net
+    volumes:
+      - academico_db_data:/var/lib/postgresql/data
+      - ./scripts-db:/docker-entrypoint-initdb.d/:ro
+
+networks:
+  academico_net:    
+    driver: bridge
+
+volumes:
+  academico_db_data:
+    name: academico_db_data
