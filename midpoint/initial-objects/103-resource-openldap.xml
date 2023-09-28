@@ -53,7 +53,7 @@
             xmlns:icfcldap="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/bundle/com.evolveum.polygon.connector-ldap/com.evolveum.polygon.connector.ldap.LdapConnector">
         <icfc:configurationProperties>
             <icfcldap:port>389</icfcldap:port>
-            <icfcldap:host>192.168.18.6</icfcldap:host>
+            <icfcldap:host>192.168.15.230</icfcldap:host>
             <icfcldap:baseContext>dc=upeu,dc=edu,dc=pe</icfcldap:baseContext>
             <icfcldap:bindDn>cn=idm,ou=Administrators,dc=upeu,dc=edu,dc=pe</icfcldap:bindDn>
             <icfcldap:bindPassword><t:clearValue>secret</t:clearValue></icfcldap:bindPassword>
