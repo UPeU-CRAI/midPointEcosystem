@@ -164,6 +164,134 @@
                     </target>
                 </inbound>
             </attribute>
+            <attribute id="28">
+                <ref>ri:program_code</ref>
+                <inbound id="29">
+                    <target>
+                        <path xmlns:gen655="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen655:program_code</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute id="31">
+                <ref>ri:sede</ref>
+                <inbound id="46">
+                    <target>
+                        <path xmlns:gen576="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen576:sede</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute id="32">
+                <ref>ri:modalidad_estudio</ref>
+                <inbound id="47">
+                    <target>
+                        <path xmlns:gen834="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen834:modalidad_estudio</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute id="33">
+                <ref>ri:program_short_name</ref>
+                <inbound id="48">
+                    <target>
+                        <path xmlns:gen546="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen546:program_short_name</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute id="34">
+                <ref>ri:program_name</ref>
+                <inbound id="49">
+                    <target>
+                        <path xmlns:gen359="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen359:program_name</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute id="35">
+                <ref>ri:card_number</ref>
+                <inbound id="50">
+                    <target>
+                        <path xmlns:gen530="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen530:card_number</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute id="36">
+                <ref>ri:contract_expiry_date</ref>
+                <inbound id="51">
+                    <target>
+                        <path xmlns:gen488="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen488:contract_expiry_date</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute id="37">
+                <ref>ri:country</ref>
+                <inbound id="52">
+                    <target>
+                        <path xmlns:gen624="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen624:country</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute id="38">
+                <ref>ri:creation_date</ref>
+                <inbound id="53">
+                    <target>
+                        <path xmlns:gen65="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen65:creation_date</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute id="39">
+                <ref>ri:date_of_birth</ref>
+                <inbound id="54">
+                    <target>
+                        <path xmlns:gen353="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen353:date_of_birth</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute id="40">
+                <ref>ri:emailpro</ref>
+                <inbound id="55">
+                    <target>
+                        <path xmlns:gen905="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen905:emailpro</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute id="41">
+                <ref>ri:sigla_facultad</ref>
+                <inbound id="56">
+                    <target>
+                        <path xmlns:gen232="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen232:sigla_facultad</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute id="42">
+                <ref>ri:gender</ref>
+                <inbound id="57">
+                    <target>
+                        <path xmlns:gen929="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen929:gender</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute id="43">
+                <ref>ri:postal_address</ref>
+                <inbound id="58">
+                    <target>
+                        <path xmlns:gen621="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen621:postal_address</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute id="44">
+                <ref>ri:region</ref>
+                <inbound id="59">
+                    <target>
+                        <path xmlns:gen963="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen963:region</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute id="45">
+                <ref>ri:username</ref>
+                <inbound id="60">
+                    <target>
+                        <path xmlns:gen18="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen18:username</path>
+                    </target>
+                </inbound>
+            </attribute>
 
             <activation>
                 <administrativeStatus>

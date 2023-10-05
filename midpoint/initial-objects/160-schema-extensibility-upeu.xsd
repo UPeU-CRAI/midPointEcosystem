@@ -19,8 +19,8 @@
 <extension> part of the objects. It is used in some built-in samples. -->
 
 <xsd:schema elementFormDefault="qualified"
-            targetNamespace="http://example.com/xml/ns/midpoint/schema"
-            xmlns:tns="http://example.com/xml/ns/midpoint/schema"
+            targetNamespace="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema"
+            xmlns:tns="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema"
             xmlns:a="http://prism.evolveum.com/xml/ns/public/annotation-3"
             xmlns:c="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
             xmlns:xsd="http://www.w3.org/2001/XMLSchema">
