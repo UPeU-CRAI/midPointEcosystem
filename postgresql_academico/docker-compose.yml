@@ -6,7 +6,7 @@ services:
     container_name: academico_db
     restart: always
     environment:
-      - POSTGRES_PASSWORD=qwe123
+      - POSTGRES_PASSWORD=secret
       - POSTGRES_USER=academico
       - POSTGRES_INITDB_ARGS=--lc-collate=en_US.utf8 --lc-ctype=en_US.utf8
     ports:

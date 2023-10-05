@@ -42,9 +42,9 @@
         <icfc:configurationProperties
         xmlns:icscdbtable="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/bundle/com.evolveum.polygon.connector-databasetable/org.identityconnectors.databasetable.DatabaseTableConnector">
             <icscdbtable:port>5433</icscdbtable:port>
-            <icscdbtable:host>192.168.15.230</icscdbtable:host>
+            <icscdbtable:host>192.168.25.6</icscdbtable:host>
             <icscdbtable:user>academico</icscdbtable:user>
-            <icscdbtable:password><clearValue>qwe123</clearValue></icscdbtable:password>
+            <icscdbtable:password><clearValue>secret</clearValue></icscdbtable:password>
             <icscdbtable:database>academico</icscdbtable:database>
             <icscdbtable:table>estudiantes</icscdbtable:table>
             <icscdbtable:keyColumn>estudiante_id</icscdbtable:keyColumn>
@@ -70,7 +70,9 @@
             <delineation>
                 <objectClass>ri:AccountObjectClass</objectClass>
             </delineation>            
-       
+            <focus>
+                <type>c:UserType</type>
+            </focus>       
             <attribute>
                 <ref>icfs:uid</ref>
                 <displayName>UUID</displayName>
@@ -133,19 +135,6 @@
                 <inbound>
                     <target>
                         <path>c:emailAddress</path>
-                    </target>
-                </inbound>
-            </attribute>
-            <attribute>
-                <ref>ri:nickname</ref>
-                <outbound>
-                    <source>
-                        <path>$focus/nickName</path>
-                    </source>
-                </outbound>
-                <inbound>
-                    <target>
-                        <path>c:nickName</path>
                     </target>
                 </inbound>
             </attribute>
