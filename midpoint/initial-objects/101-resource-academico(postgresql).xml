@@ -1,19 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright (c) 2017 Evolveum
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~     http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
 
 <resource oid="04afeda6-394b-11e6-8cbe-abf7ff430056"
     xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
@@ -22,6 +7,7 @@
     xmlns:xsd="http://www.w3.org/2001/XMLSchema"
     xmlns:q="http://prism.evolveum.com/xml/ns/public/query-3"
     xmlns:ri="http://midpoint.evolveum.com/xml/ns/public/resource/instance-3"
+    xmlns:ext="http://midpoint.evolveum.com/xml/ns/story/orgsync/ext"
     xmlns:icfs="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/resource-schema-3"
     xmlns:icfc="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/connector-schema-3"
     xmlns:my="http://myself.me/schemas/whatever">
@@ -47,7 +33,7 @@
             <icscdbtable:password><clearValue>secret</clearValue></icscdbtable:password>
             <icscdbtable:database>academico</icscdbtable:database>
             <icscdbtable:table>estudiantes</icscdbtable:table>
-            <icscdbtable:keyColumn>estudiante_id</icscdbtable:keyColumn>
+            <icscdbtable:keyColumn>userid</icscdbtable:keyColumn>
             <icscdbtable:passwordColumn>password</icscdbtable:passwordColumn>
             <icscdbtable:jdbcDriver>org.postgresql.Driver</icscdbtable:jdbcDriver>
             <icscdbtable:jdbcUrlTemplate>jdbc:postgresql://%h:%p/%d</icscdbtable:jdbcUrlTemplate>
@@ -56,7 +42,6 @@
             <icscdbtable:nativeTimestamps>false</icscdbtable:nativeTimestamps>
             <icscdbtable:allNative>false</icscdbtable:allNative>
             <icscdbtable:changeLogColumn>change_timestamp</icscdbtable:changeLogColumn>
-            <icscdbtable:datasource></icscdbtable:datasource>
         </icfc:configurationProperties>
 
     </connectorConfiguration>
@@ -75,7 +60,40 @@
             </focus>       
             <attribute>
                 <ref>icfs:uid</ref>
-                <displayName>UUID</displayName>
+                <displayName>User ID</displayName>
+                <limitations>
+                    <access>
+                        <read>true</read>
+                        <add>true</add>
+                        <modify>true</modify>
+                    </access>
+                </limitations>
+            </attribute>
+            <attribute>
+                <ref>icfs:name</ref>
+                <displayName>Name</displayName>
+                <limitations>
+                    <minOccurs>0</minOccurs>
+                    <access>
+                        <read>true</read>
+                        <add>true</add>
+                        <modify>true</modify>
+                    </access>                        
+                </limitations>
+                <!-- <outbound>
+                    <source>
+                        <path>$user/name</path>
+                    </source>
+                </outbound> -->
+                <inbound>
+                    <target>
+                        <path>c:name</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute>
+                <ref>ri:empno</ref>
+                <displayName>empno</displayName>
                 <limitations>
                     <minOccurs>0</minOccurs>
                     <access>
@@ -84,37 +102,37 @@
                         <modify>true</modify>
                     </access>
                 </limitations>
-          
-            </attribute>
-
-            <attribute>
-                    <ref>icfs:name</ref>
-
-                    <!-- Readable name for the attribute. This will be used in GUI -->
-                    <displayName>Name</displayName>
-                    <limitations>
-                        <minOccurs>0</minOccurs>
-                    </limitations>
-                    <outbound>
-                        <source>
-                            <path>$user/name</path>
-                        </source>
-                    </outbound>
-                    <inbound>
-                        <target>
-                            <path>$user/name</path>
-                        </target>
-                    </inbound>
+                <!-- <outbound>
+                    <source>
+                        <path>$focus/employeeNumber</path>
+                    </source>
+                </outbound> -->
+                <inbound>
+                    <target>
+                        <path>c:employeeNumber</path>
+                    </target>
+                </inbound>
+                <inbound>
+                    <expression>
+                        <value>
+                            <!-- Employee role -->
+                            <targetRef oid="86d3b462-2334-11ea-bbac-13d84ce0a1df" type="RoleType"/>
+                        </value>
+                    </expression>
+                    <target>
+                        <path>assignment</path>
+                    </target>
+                </inbound>
             </attribute>
 
             <attribute>
                 <ref>ri:first_name</ref>
                 <displayName>First name</displayName>
-                <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/givenName</path>
                     </source>
-                </outbound> 
+                </outbound> --> 
                 <inbound>
                     <target>
                         <path>c:givenName</path>
@@ -125,11 +143,11 @@
             <attribute>
                 <ref>ri:last_name</ref>
                 <displayName>Last name</displayName>
-                <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/familyName</path>
                     </source>
-                </outbound>
+                </outbound> -->
                 <inbound>
                     <target>
                         <path>c:familyName</path>
@@ -138,11 +156,11 @@
             </attribute>
             <attribute>
                 <ref>ri:email</ref>
-                <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/emailAddress</path>
                     </source>
-                </outbound>
+                </outbound> -->
                 <inbound>
                     <target>
                         <path>c:emailAddress</path>
@@ -151,11 +169,11 @@
             </attribute>
             <attribute>
                 <ref>ri:locality</ref>
-                <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/locality</path>
                     </source>
-                </outbound>
+                </outbound> -->
                 <inbound>
                     <target>
                         <path>c:locality</path>
@@ -164,11 +182,11 @@
             </attribute>
             <attribute>
                 <ref>ri:telephone_number</ref>
-                <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/telephoneNumber</path>
                     </source>
-                </outbound>
+                </outbound> -->
                 <inbound>
                     <target>
                         <path>c:telephoneNumber</path>
@@ -176,25 +194,25 @@
                 </inbound>
             </attribute>
             <attribute>
-                <ref>ri:program_code</ref>
-                <outbound>
+                <ref>ri:jobcode</ref>
+                <!-- <outbound>
                     <source>
-                        <path>$focus/extension/program_code</path>
+                        <path>$focus/extension/jobcode</path>
                     </source>
-                </outbound>
+                </outbound> -->
                 <inbound>
                     <target>
-                        <path xmlns:gen655="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen655:program_code</path>
+                        <path xmlns:gen775="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen775:jobCode</path>
                     </target>
                 </inbound>
             </attribute>
             <attribute>
                 <ref>ri:sede</ref>
-                <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/extension/sede</path>
                     </source>
-                </outbound>
+                </outbound> -->
                 <inbound>
                     <target>
                         <path xmlns:gen576="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen576:sede</path>
@@ -203,11 +221,11 @@
             </attribute>
             <attribute>
                 <ref>ri:modalidad_estudio</ref>
-                <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/extension/modalidad_estudio</path>
                     </source>
-                </outbound>
+                </outbound> -->
                 <inbound>
                     <target>
                         <path xmlns:gen834="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen834:modalidad_estudio</path>
@@ -216,11 +234,11 @@
             </attribute>
             <attribute>
                 <ref>ri:program_short_name</ref>
-                <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/extension/program_short_name</path>
                     </source>
-                </outbound>
+                </outbound> -->
                 <inbound>
                     <target>
                         <path xmlns:gen546="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen546:program_short_name</path>
@@ -229,11 +247,11 @@
             </attribute>
             <attribute>
                 <ref>ri:program_name</ref>
-                <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/extension/program_name</path>
                     </source>
-                </outbound>
+                </outbound> -->
                 <inbound>
                     <target>
                         <path xmlns:gen359="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen359:program_name</path>
@@ -242,11 +260,11 @@
             </attribute>
             <attribute>
                 <ref>ri:card_number</ref>
-                <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/extension/card_number</path>
                     </source>
-                </outbound>
+                </outbound> -->
                 <inbound>
                     <target>
                         <path xmlns:gen530="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen530:card_number</path>
@@ -255,7 +273,7 @@
             </attribute>
             <attribute>
                 <ref>ri:contract_expiry_date</ref>
-            <!--    <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/extension/contract_expiry_date</path>
                     </source>
@@ -268,11 +286,11 @@
             </attribute>
             <attribute>
                 <ref>ri:country</ref>
-                <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/extension/country</path>
                     </source>
-                </outbound>
+                </outbound> -->
                 <inbound>
                     <target>
                         <path xmlns:gen624="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen624:country</path>
@@ -281,7 +299,7 @@
             </attribute>
             <attribute>
                 <ref>ri:creation_date</ref>
-            <!--    <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/extension/creation_date</path>
                     </source>
@@ -294,7 +312,7 @@
             </attribute>
             <attribute>
                 <ref>ri:date_of_birth</ref>
-            <!--    <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/extension/date_of_birth</path>
                     </source>
@@ -307,11 +325,11 @@
             </attribute>
             <attribute>
                 <ref>ri:emailpro</ref>
-                <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/extension/emailpro</path>
                     </source>
-                </outbound>
+                </outbound> -->
                 <inbound>
                     <target>
                         <path xmlns:gen905="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen905:emailpro</path>
@@ -320,11 +338,11 @@
             </attribute>
             <attribute>
                 <ref>ri:sigla_facultad</ref>
-                <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/extension/sigla_facultad</path>
                     </source>
-                </outbound>
+                </outbound> -->
                 <inbound>
                     <target>
                         <path xmlns:gen232="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen232:sigla_facultad</path>
@@ -333,11 +351,11 @@
             </attribute>
             <attribute>
                 <ref>ri:gender</ref>
-                <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/extension/gender</path>
                     </source>
-                </outbound>
+                </outbound> -->
                 <inbound>
                     <target>
                         <path xmlns:gen929="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen929:gender</path>
@@ -346,11 +364,11 @@
             </attribute>
             <attribute>
                 <ref>ri:postal_address</ref>
-                <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/extension/postal_address</path>
                     </source>
-                </outbound>
+                </outbound> -->
                 <inbound>
                     <target>
                         <path xmlns:gen621="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen621:postal_address</path>
@@ -359,94 +377,67 @@
             </attribute>
             <attribute>
                 <ref>ri:region</ref>
-                <outbound>
+                <!-- <outbound>
                     <source>
                         <path>$focus/extension/region</path>
                     </source>
-                </outbound>
+                </outbound> -->
                 <inbound>
                     <target>
                         <path xmlns:gen963="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen963:region</path>
                     </target>
                 </inbound>
             </attribute>
-            <attribute>
-                <ref>ri:username</ref>
-                <outbound>
-                    <source>
-                        <path>$focus/extension/username</path>
-                    </source>
-                </outbound>
-                <inbound>
-                    <target>
-                        <path xmlns:gen18="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen18:username</path>
-                    </target>
-                </inbound>
-            </attribute>
-
+            
             <activation>
+            <!--Mapeo de activación para este recurso.
+            Lo usamos para deshabilitar al usuario en midPoint 
+            si la cuenta está marcada como RETIRADA en el recurso fuente. 
+            Hacemos esto configurando este mapeo simple:-->
                 <administrativeStatus>
-                    <inbound/>
+                    <inbound>
+                        <strength>weak</strength>
+                    </inbound>
                 </administrativeStatus>
             </activation>
 
             <credentials>
-                <password>
-                    <inbound/>
-                </password>
+                    <password>
+                        <!--<outbound/>-->
+                        <inbound>
+                            <strength>weak</strength>
+                            <!--Se implementa un mapeo de asignación débil desde 
+                            el recurso fuente para generar contraseñas aleatorias 
+                            solo para nuevos usuarios, preservando contraseñas existentes 
+                            durante operaciones de modificación.-->
+                            <expression>
+                                <generate/>
+                            </expression>
+                        </inbound>
+                    </password>
             </credentials>
 
             <projection>
                 <assignmentPolicyEnforcement>none</assignmentPolicyEnforcement>
             </projection>
-
-            <synchronization>
-                <reaction>
-                    <situation>linked</situation>
-                    <actions>
-                        <synchronize>
-                            <synchronize>true</synchronize>
-                        </synchronize>
-                    </actions>
-                </reaction>
-                <reaction>
-                    <situation>deleted</situation>
-                    <actions>
-                        <deleteFocus>
-                            <synchronize>true</synchronize>
-                        </deleteFocus>
-                    </actions>
-                </reaction>
-                <reaction>
-                    <situation>unlinked</situation>
-                    <actions>
-                        <link>
-                            <synchronize>true</synchronize>
-                        </link>
-                    </actions>
-                </reaction>
-                <reaction>
-                    <situation>unmatched</situation>
-                    <actions>
-                        <addFocus>
-                            <synchronize>true</synchronize>
-                            <objectTemplateRef oid="22f83022-b76d-11e9-8a30-6ffc11b23016" type="c:ObjectTemplateType">
-                                <!-- User Template -->
-                                <!-- Reference to the User Template is here. If the user would be
-                                created as a result of this action, it will be created according
-                                to this template. -->
-                            </objectTemplateRef>
-                        </addFocus>
-                    </actions>
-                </reaction>
-            </synchronization>
-
+            
         </objectType>
     </schemaHandling>
 
     <capabilities xmlns:cap="http://midpoint.evolveum.com/xml/ns/public/resource/capabilities-3">
         <configured>
             <cap:activation>
+            <!--Esta sección se configura manualmente.
+            Esta capacidad informa sobre habilitar/deshabilitar el indicador de activación:
+            Aquí hay otro ejemplo. Más info en: https://docs.evolveum.com/midpoint/demo/
+                <cap:status>
+                    <cap:attribute>ri:emptype</cap:attribute>
+                    <cap:enableValue>FTE</cap:enableValue>
+                    <cap:enableValue>PTE</cap:enableValue>
+                    <cap:enableValue>CONTRACTOR</cap:enableValue>
+                    <cap:disableValue>RETIRED</cap:disableValue>
+                    <cap:ignoreAttribute>false</cap:ignoreAttribute>
+                </cap:status> -->
                 <cap:status>
                     <cap:attribute>ri:disabled</cap:attribute>
                     <cap:enableValue></cap:enableValue>
@@ -456,5 +447,72 @@
             </cap:activation>
         </configured>
     </capabilities>
+
+    <!--Esta sincronización estaba en la platilla original, parece que ya es obsoleta, pero si funciona-->
+    <synchronization>
+            <objectSynchronization>
+                <!--La sincronización de este recurso está activada.
+                Significa que la sincronización reaccionará a los cambios detectados por
+                el sistema (tarea de sincronización en directo, descubrimiento o reconciliación) -->
+                <enabled>true</enabled>
+                <!--Este recurso está configurado como una fuente autorizada.
+                Significa que midPoint creará un usuario cuando se encuentre un nuevo 
+                registro y actualizará al usuario cuando se actualice un registro-->
+                <correlation>
+                    <q:description>
+                        La expresión de correlación es una consulta de búsqueda.
+                        La siguiente consulta de búsqueda buscará usuarios que tengan "name"
+                        igual al atributo "name" de la cuenta. En pocas palabras,
+                        buscará coincidencias en los nombres de usuario en el IDM y en el recurso.
+                        La regla de correlación siempre busca usuarios, por lo que no coincidirá con
+                        ningún otro tipo de objeto.
+                    </q:description>
+                    <q:equal>
+                        <q:path>employeeNumber</q:path>
+                        <expression>
+                            <path>$projection/attributes/empno</path>
+                        </expression>
+                    </q:equal>
+                </correlation>
+
+                <!-- La regla de confirmación puede estar aquí, pero como la búsqueda anterior siempre
+                     devuelve como máximo una coincidencia, la regla de confirmación no es necesaria. -->
+
+                <!-- A continuación se describen las reacciones ante una situación.
+                     La configuración aquí asume que este recurso es autoritativo,
+                     por lo tanto todas las cuentas creadas en el recurso deberían
+                     reflejadas como nuevos usuarios en IDM.
+                     Véase http://wiki.evolveum.com/display/midPoint/Synchronization+Situations
+                 -->
+                <reaction>
+                    <situation>linked</situation>
+                    <action>
+                        <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#modifyUser</handlerUri>
+                    </action>
+                </reaction>
+                <reaction>
+                    <situation>deleted</situation>
+                    <action>
+                        <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#unlinkAccount</handlerUri>
+                    </action>
+                </reaction>
+                <reaction>
+                    <situation>unlinked</situation>
+                    <action>
+                        <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#linkAccount</handlerUri>
+                    </action>
+                </reaction>
+                <reaction>
+                    <situation>unmatched</situation>
+                    <!-- La referencia a la plantilla de usuario está aquí. Si el usuario se
+                         creado como resultado de esta acción, se creará según
+                         a esta plantilla. -->
+                    <objectTemplateRef oid="22f83022-b76d-11e9-8a30-6ffc11b23016" type="c:ObjectTemplateType"/>
+                    <action>
+                        <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#addUser</handlerUri>
+                    </action>
+                </reaction>
+            </objectSynchronization>
+        </synchronization>
 
 </resource>

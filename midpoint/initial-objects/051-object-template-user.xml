@@ -55,4 +55,27 @@
         </mapping>
     </item>
 
+    <item>
+        <ref>assignment</ref>
+        <mapping>
+            <strength>strong</strength>
+            <source>
+                <path>extension/jobCode</path>
+            </source>
+            <expression>
+                <assignmentTargetSearch>
+                    <targetType>RoleType</targetType>
+                    <filter>
+                        <q:equal>
+                            <q:path>extension/autoassignJobCode</q:path>
+                            <expression>
+                                <path>$jobCode</path>
+                            </expression>
+                        </q:equal>
+                    </filter>
+                </assignmentTargetSearch>
+            </expression>
+        </mapping>
+    </item>
+    
 </objectTemplate>
