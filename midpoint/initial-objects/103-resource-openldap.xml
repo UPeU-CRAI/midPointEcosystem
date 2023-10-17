@@ -57,6 +57,13 @@
             <displayName>Normal Account</displayName>
             <default>true</default>
             <objectClass>ri:inetOrgPerson</objectClass>
+            <delineation>
+                <objectClass>ri:inetOrgPerson</objectClass>
+                <auxiliaryObjectClass>ri:upeuSchema</auxiliaryObjectClass>
+            </delineation>
+            <focus>
+                <type>c:UserType</type>
+            </focus>
 
             <attribute>
                 <ref>ri:dn</ref>
@@ -145,6 +152,120 @@
                     </expression>
                 </outbound>
             </attribute>
+
+            <attribute>
+                <ref>ri:mail</ref>
+                <outbound>
+                    <source>
+                        <path>$focus/emailAddress</path>
+                    </source>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:upeuMail2</ref>
+                <outbound>
+                    <source>
+                        <path>$focus/extension/email2</path>
+                    </source>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:upeuGender</ref>
+                <outbound>
+                    <source>
+                        <path>$focus/extension/gender</path>
+                    </source>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:mobile</ref>
+                <outbound>
+                    <source>
+                        <path>$focus/telephoneNumber</path>
+                    </source>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:upeuDateOfBirth</ref>
+                <outbound>
+                    <source>
+                        <path>$focus/extension/dateOfBirth</path>
+                    </source>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:postalAddress</ref>
+                <outbound>
+                    <source>
+                        <path>$focus/extension/postalAddress</path>
+                    </source>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:upeuCountryOfResidence</ref>
+                <outbound>
+                    <source>
+                        <path>$focus/extension/countryOfResidence</path>
+                    </source>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:upeuCardNumber</ref>
+                <outbound>
+                    <source>
+                        <path>$focus/extension/cardNumber</path>
+                    </source>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:upeuFacultyShortName</ref>
+                <outbound>
+                    <source>
+                        <path>$focus/extension/facultyShortName</path>
+                    </source>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:upeuAcademicProgrammeShortName</ref>
+                <outbound>
+                    <source>
+                        <path>$focus/extension/academicProgrammeShortName</path>
+                    </source>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:upeuContractExpiryDate</ref>
+                <outbound>
+                    <source>
+                        <path>$focus/extension/contractExpiryDate</path>
+                    </source>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:upeuPrimaryAffiliation</ref>
+                <outbound>
+                    <source>
+                        <path>$focus/extension/primaryAffiliation</path>
+                    </source>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:upeuCityOfResidence</ref>
+                <outbound>
+                    <source>
+                        <path>$focus/extension/cityOfResidence</path>
+                    </source>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:upeuProvinceOfResidence</ref>
+                <outbound>
+                    <source>
+                        <path>$focus/extension/provinceOfResidence</path>
+                    </source>
+                </outbound>
+            </attribute>
+
 
             <activation>
                 <administrativeStatus>

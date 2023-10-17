@@ -17,7 +17,7 @@
             </xsd:appinfo>
         </xsd:annotation>
         <xsd:sequence>
-            <xsd:element name="date_of_birth" type="xsd:dateTime" minOccurs="0" a:maxOccurs="1">
+            <xsd:element name="dateOfBirth" type="xsd:dateTime" minOccurs="0" a:maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Fecha de nacimiento</a:displayName>
@@ -35,7 +35,7 @@
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
-            <xsd:element name="card_number" type="xsd:string" minOccurs="0" a:maxOccurs="1">
+            <xsd:element name="cardNumber" type="xsd:string" minOccurs="0" a:maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Número de carnet</a:displayName>
@@ -53,7 +53,7 @@
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
-            <xsd:element name="emailpro" type="xsd:string" minOccurs="0" a:maxOccurs="unbounded">
+            <xsd:element name="email2" type="xsd:string" minOccurs="0" a:maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Correo electrónico secundario</a:displayName>
@@ -71,7 +71,7 @@
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
-            <xsd:element name="sigla_facultad" type="xsd:string" minOccurs="0" a:maxOccurs="unbounded">
+            <xsd:element name="facultyShortName" type="xsd:string" minOccurs="0" a:maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Sigla de la facultad</a:displayName>
@@ -80,7 +80,7 @@
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
-            <xsd:element name="jobcode" type="xsd:string" minOccurs="0" a:maxOccurs="1">
+            <xsd:element name="jobCode" type="xsd:string" minOccurs="0" a:maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Job code</a:displayName>
@@ -91,7 +91,7 @@
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
-            <xsd:element name="program_short_name" type="xsd:string" minOccurs="0" a:maxOccurs="unbounded">
+            <xsd:element name="academicProgrammeShortName" type="xsd:string" minOccurs="0" a:maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>program short name</a:displayName>
@@ -102,7 +102,7 @@
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
-            <xsd:element name="program_name" type="xsd:string" minOccurs="0" a:maxOccurs="unbounded">
+            <xsd:element name="academicProgrammeName" type="xsd:string" minOccurs="0" a:maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Nombre del programa</a:displayName>
@@ -120,7 +120,7 @@
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
-            <xsd:element name="contract_expiry_date" type="xsd:dateTime" minOccurs="0" a:maxOccurs="unbounded">
+            <xsd:element name="contractExpiryDate" type="xsd:dateTime" minOccurs="0" a:maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Fecha de vencimiento del contrato</a:displayName>
@@ -129,7 +129,7 @@
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>            
-            <xsd:element name="country" type="xsd:string" minOccurs="0" a:maxOccurs="1">
+            <xsd:element name="countryOfResidence" type="xsd:string" minOccurs="0" a:maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>País</a:displayName>
@@ -138,21 +138,39 @@
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
-            <xsd:element name="region" type="xsd:string" minOccurs="0" a:maxOccurs="1">
+            <xsd:element name="provinceOfResidence" type="xsd:string" minOccurs="0" a:maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
-                        <a:displayName>region</a:displayName>
-                        <a:help>region donde vive el estudiante</a:help>
+                        <a:displayName>Provincia</a:displayName>
+                        <a:help>Region donde vive el estudiante</a:help>
                         <a:displayOrder>500</a:displayOrder>
                     </xsd:appinfo>
                 </xsd:annotation>
-            </xsd:element>            
-            <xsd:element name="postal_address" type="xsd:string" minOccurs="0" a:maxOccurs="1">
+            </xsd:element>
+            <xsd:element name="cityOfResidence" type="xsd:string" minOccurs="0" a:maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Ciudad</a:displayName>
+                        <a:help>Ciudad donde vive el estudiante</a:help>
+                        <a:displayOrder>501</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>              
+            <xsd:element name="postalAddress" type="xsd:string" minOccurs="0" a:maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>postal address</a:displayName>
                         <a:help>Dirección del estudiante</a:help>
                         <a:displayOrder>505</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+            <xsd:element name="primaryAffiliation" type="xsd:string" minOccurs="0" a:maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Afiliación principal</a:displayName>
+                        <a:help>Relación principal de la persona con la institución. Ej, profesores, estudiantes, personal, alumnos, miembros, afiliados, empleados, asistentes a la biblioteca, exalumno, etc</a:help>
+                        <a:displayOrder>506</a:displayOrder>
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>

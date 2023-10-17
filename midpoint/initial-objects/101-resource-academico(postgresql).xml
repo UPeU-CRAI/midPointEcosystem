@@ -12,7 +12,9 @@
     xmlns:icfc="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/connector-schema-3"
     xmlns:my="http://myself.me/schemas/whatever">
 
-       <name>Sistema Académico</name>
+    <name>Sistema Académico</name>
+
+    <description>Recurso Database Table que utiliza un conector DatabaseTableConnector ConnId. Contiene la configuración para su uso como un servidor de PostgreSQL, sincronización y configuración de correlación.</description>
 
     <connectorRef type="ConnectorType">
         <filter>
@@ -80,11 +82,6 @@
                         <modify>true</modify>
                     </access>                        
                 </limitations>
-                <!-- <outbound>
-                    <source>
-                        <path>$user/name</path>
-                    </source>
-                </outbound> -->
                 <inbound>
                     <target>
                         <path>c:name</path>
@@ -102,11 +99,6 @@
                         <modify>true</modify>
                     </access>
                 </limitations>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/employeeNumber</path>
-                    </source>
-                </outbound> -->
                 <inbound>
                     <target>
                         <path>c:employeeNumber</path>
@@ -124,30 +116,25 @@
                     </target>
                 </inbound>
             </attribute>
-
             <attribute>
-                <ref>ri:first_name</ref>
-                <displayName>First name</displayName>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/givenName</path>
-                    </source>
-                </outbound> --> 
+                <ref>ri:jobcode</ref>
+                <inbound>
+                    <target>
+                        <path xmlns:gen699="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen699:jobCode</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <!-- Hasta aquí son los atributos base para la integración y flujos automátios -->
+            <attribute>
+                <ref>ri:givennane</ref>
                 <inbound>
                     <target>
                         <path>c:givenName</path>
                     </target>
                 </inbound>
-                             
             </attribute>
             <attribute>
-                <ref>ri:last_name</ref>
-                <displayName>Last name</displayName>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/familyName</path>
-                    </source>
-                </outbound> -->
+                <ref>ri:surname</ref>
                 <inbound>
                     <target>
                         <path>c:familyName</path>
@@ -156,11 +143,6 @@
             </attribute>
             <attribute>
                 <ref>ri:email</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/emailAddress</path>
-                    </source>
-                </outbound> -->
                 <inbound>
                     <target>
                         <path>c:emailAddress</path>
@@ -168,25 +150,7 @@
                 </inbound>
             </attribute>
             <attribute>
-                <ref>ri:locality</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/locality</path>
-                    </source>
-                </outbound> -->
-                <inbound>
-                    <target>
-                        <path>c:locality</path>
-                    </target>
-                </inbound>
-            </attribute>
-            <attribute>
-                <ref>ri:telephone_number</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/telephoneNumber</path>
-                    </source>
-                </outbound> -->
+                <ref>ri:mobile</ref>
                 <inbound>
                     <target>
                         <path>c:telephoneNumber</path>
@@ -194,200 +158,118 @@
                 </inbound>
             </attribute>
             <attribute>
-                <ref>ri:jobcode</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/extension/jobcode</path>
-                    </source>
-                </outbound> -->
-                <inbound>
-                    <target>
-                        <path xmlns:gen775="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen775:jobCode</path>
-                    </target>
-                </inbound>
-            </attribute>
-            <attribute>
                 <ref>ri:sede</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/extension/sede</path>
-                    </source>
-                </outbound> -->
                 <inbound>
                     <target>
-                        <path xmlns:gen576="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen576:sede</path>
+                        <path xmlns:gen134="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen134:sede</path>
                     </target>
                 </inbound>
             </attribute>
             <attribute>
-                <ref>ri:modalidad_estudio</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/extension/modalidad_estudio</path>
-                    </source>
-                </outbound> -->
+                <ref>ri:facultyshortname</ref>
                 <inbound>
                     <target>
-                        <path xmlns:gen834="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen834:modalidad_estudio</path>
+                        <path xmlns:gen191="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen191:facultyShortName</path>
                     </target>
                 </inbound>
             </attribute>
             <attribute>
-                <ref>ri:program_short_name</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/extension/program_short_name</path>
-                    </source>
-                </outbound> -->
+                <ref>ri:academicprogrammeshortname</ref>
                 <inbound>
                     <target>
-                        <path xmlns:gen546="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen546:program_short_name</path>
+                        <path xmlns:gen819="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen819:academicProgrammeShortName</path>
                     </target>
                 </inbound>
             </attribute>
             <attribute>
-                <ref>ri:program_name</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/extension/program_name</path>
-                    </source>
-                </outbound> -->
+                <ref>ri:primaryaffiliation</ref>
                 <inbound>
                     <target>
-                        <path xmlns:gen359="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen359:program_name</path>
+                        <path xmlns:gen217="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen217:primaryAffiliation</path>
                     </target>
                 </inbound>
             </attribute>
             <attribute>
-                <ref>ri:card_number</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/extension/card_number</path>
-                    </source>
-                </outbound> -->
+                <ref>ri:cardnumber</ref>
                 <inbound>
                     <target>
-                        <path xmlns:gen530="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen530:card_number</path>
+                        <path xmlns:gen884="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen884:cardNumber</path>
                     </target>
                 </inbound>
             </attribute>
             <attribute>
-                <ref>ri:contract_expiry_date</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/extension/contract_expiry_date</path>
-                    </source>
-                </outbound> -->
+                <ref>ri:contractexpirydate</ref>
                 <inbound>
                     <target>
-                        <path xmlns:gen488="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen488:contract_expiry_date</path>
-                    </target>
-                </inbound>
-            </attribute>
-            <attribute>
-                <ref>ri:country</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/extension/country</path>
-                    </source>
-                </outbound> -->
-                <inbound>
-                    <target>
-                        <path xmlns:gen624="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen624:country</path>
+                        <path xmlns:gen211="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen211:contractExpiryDate</path>
                     </target>
                 </inbound>
             </attribute>
             <attribute>
                 <ref>ri:creation_date</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/extension/creation_date</path>
-                    </source>
-                </outbound> -->
                 <inbound>
                     <target>
-                        <path xmlns:gen65="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen65:creation_date</path>
+                        <path xmlns:gen148="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen148:creation_date</path>
                     </target>
                 </inbound>
             </attribute>
             <attribute>
-                <ref>ri:date_of_birth</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/extension/date_of_birth</path>
-                    </source>
-                </outbound> -->
+                <ref>ri:dateofbirth</ref>
                 <inbound>
                     <target>
-                        <path xmlns:gen353="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen353:date_of_birth</path>
+                        <path xmlns:gen889="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen889:dateOfBirth</path>
                     </target>
                 </inbound>
             </attribute>
             <attribute>
-                <ref>ri:emailpro</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/extension/emailpro</path>
-                    </source>
-                </outbound> -->
+                <ref>ri:email2</ref>
                 <inbound>
                     <target>
-                        <path xmlns:gen905="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen905:emailpro</path>
-                    </target>
-                </inbound>
-            </attribute>
-            <attribute>
-                <ref>ri:sigla_facultad</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/extension/sigla_facultad</path>
-                    </source>
-                </outbound> -->
-                <inbound>
-                    <target>
-                        <path xmlns:gen232="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen232:sigla_facultad</path>
+                        <path xmlns:gen40="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen40:email2</path>
                     </target>
                 </inbound>
             </attribute>
             <attribute>
                 <ref>ri:gender</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/extension/gender</path>
-                    </source>
-                </outbound> -->
                 <inbound>
                     <target>
-                        <path xmlns:gen929="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen929:gender</path>
+                        <path xmlns:gen800="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen800:gender</path>
                     </target>
                 </inbound>
             </attribute>
             <attribute>
-                <ref>ri:postal_address</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/extension/postal_address</path>
-                    </source>
-                </outbound> -->
+                <ref>ri:postaladdress</ref>
                 <inbound>
                     <target>
-                        <path xmlns:gen621="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen621:postal_address</path>
+                        <path xmlns:gen635="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen635:postalAddress</path>
                     </target>
                 </inbound>
             </attribute>
             <attribute>
-                <ref>ri:region</ref>
-                <!-- <outbound>
-                    <source>
-                        <path>$focus/extension/region</path>
-                    </source>
-                </outbound> -->
+                <ref>ri:cityofresidence</ref>
                 <inbound>
                     <target>
-                        <path xmlns:gen963="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen963:region</path>
+                        <path xmlns:gen828="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen828:cityOfResidence</path>
                     </target>
                 </inbound>
             </attribute>
+            <attribute>
+                <ref>ri:provinceofresidence</ref>
+                <inbound>
+                    <target>
+                        <path xmlns:gen617="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen617:provinceOfResidence</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute>
+                <ref>ri:countryofresidence</ref>
+                <inbound>
+                    <target>
+                        <path xmlns:gen980="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema">c:extension/gen980:countryOfResidence</path>
+                    </target>
+                </inbound>
+            </attribute>
+            
             
             <activation>
             <!--Mapeo de activación para este recurso.
