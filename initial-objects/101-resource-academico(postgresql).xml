@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<resource oid="04afeda6-394b-11e6-8cbe-abf7ff430056"
+    xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
+    xmlns:c="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:q="http://prism.evolveum.com/xml/ns/public/query-3"
+    xmlns:ri="http://midpoint.evolveum.com/xml/ns/public/resource/instance-3"
+    xmlns:ext="http://midpoint.evolveum.com/xml/ns/story/orgsync/ext"
+    xmlns:icfs="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/resource-schema-3"
+    xmlns:icfc="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/connector-schema-3"
+    xmlns:my="http://myself.me/schemas/whatever">
+
+    <name>DB Postgres Lamb Academic</name>
+
+    <description>Recurso Database Table que utiliza un conector DatabaseTableConnector ConnId. Contiene la configuración para su uso como un servidor de PostgreSQL de usuarios de Lamb Academic, sincronización y configuración de correlación.</description>
+
+    <connectorRef type="ConnectorType">
+        <filter>
+            <q:equal>
+            <q:path>c:connectorType</q:path>
+              <q:value>org.identityconnectors.databasetable.DatabaseTableConnector</q:value>
+            </q:equal>
+          </filter>
+    </connectorRef>
+
+    <connectorConfiguration>
+
+        <icfc:configurationProperties
+        xmlns:icscdbtable="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/bundle/com.evolveum.polygon.connector-databasetable/org.identityconnectors.databasetable.DatabaseTableConnector">
+            <icscdbtable:port>5433</icscdbtable:port>
+            <icscdbtable:host>192.168.15.230</icscdbtable:host>
+            <icscdbtable:user>academico</icscdbtable:user>
+            <icscdbtable:password><clearValue>secret</clearValue></icscdbtable:password>
+            <icscdbtable:database>academico_db</icscdbtable:database>
+            <icscdbtable:table>estudiantes</icscdbtable:table>
+            <icscdbtable:keyColumn>userid</icscdbtable:keyColumn>
+            <icscdbtable:passwordColumn>user_password</icscdbtable:passwordColumn>
+            <icscdbtable:jdbcDriver>org.postgresql.Driver</icscdbtable:jdbcDriver>
+            <icscdbtable:jdbcUrlTemplate>jdbc:postgresql://%h:%p/%d</icscdbtable:jdbcUrlTemplate>
+            <icscdbtable:enableEmptyString>false</icscdbtable:enableEmptyString>
+            <icscdbtable:rethrowAllSQLExceptions>true</icscdbtable:rethrowAllSQLExceptions>
+            <icscdbtable:nativeTimestamps>false</icscdbtable:nativeTimestamps>
+            <icscdbtable:allNative>false</icscdbtable:allNative>
+            <icscdbtable:changeLogColumn>change_timestamp</icscdbtable:changeLogColumn>
+            <icscdbtable:suppressPassword>false</icscdbtable:suppressPassword>
+        </icfc:configurationProperties>
+
+    </connectorConfiguration>
+
+    <schemaHandling>
+        <objectType>
+            <kind>account</kind>
+            <displayName>Object type DB PostgreSQL Lamb Academic</displayName>
+            <description>Object Type para conectarse a la base de datos PostgreSQL que contiene información de los estudiantes</description>
+            <default>true</default>
+            <objectClass>ri:AccountObjectClass</objectClass>
+            <delineation>
+                <objectClass>ri:AccountObjectClass</objectClass>
+                <searchHierarchyScope>sub</searchHierarchyScope>
+            </delineation>            
+            <focus>
+                <type>c:UserType</type>
+                <archetypeRef oid="00000000-0000-0000-0000-000000000702" type="c:ArchetypeType">
+                    <!-- Person -->
+                </archetypeRef>
+            </focus>       
+            <attribute>
+                <ref>icfs:uid</ref>
+                <displayName>User ID</displayName>
+                <limitations>
+                    <access>
+                        <read>true</read>
+                        <add>true</add>
+                        <modify>true</modify>
+                    </access>
+                </limitations>
+            </attribute>
+            <attribute>
+                <ref>icfs:name</ref>
+                <displayName>Name</displayName>
+                <limitations>
+                    <minOccurs>0</minOccurs>
+                    <access>
+                        <read>true</read>
+                        <add>true</add>
+                        <modify>true</modify>
+                    </access>                        
+                </limitations>
+                <inbound>
+                    <target>
+                        <path>c:name</path>
+                    </target>
+                </inbound>
+                <inbound>
+                    <strength>strong</strength>
+                    <target>
+                        <path>nickName</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <!-- Hasta aquí son los atributos base para la integración y flujos automátios -->
+            <attribute>
+                <ref>ri:givenname</ref>
+                <inbound>
+                    <target>
+                        <path>c:givenName</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute>
+                <ref>ri:surname</ref>
+                <inbound>
+                    <target>
+                        <path>c:familyName</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute>
+                <ref>ri:email</ref>
+                <inbound>
+                    <target>
+                        <path>c:emailAddress</path>
+                    </target>
+                </inbound>
+            </attribute>
+            
+            <attribute>
+                <ref>ri:empno</ref>
+                <inbound>
+                    <strength>strong</strength>
+                    <target>
+                        <path>employeeNumber</path>
+                    </target>
+                </inbound>
+                <inbound>
+                    <lifecycleState>active</lifecycleState>
+                    <strength>strong</strength>
+                    <expression>
+                        <script>
+                            <code>
+import com.evolveum.midpoint.xml.ns._public.common.common_3.AssignmentType
+import com.evolveum.midpoint.xml.ns._public.common.common_3.ObjectReferenceType
+import com.evolveum.midpoint.xml.ns._public.common.common_3.RoleType
+
+// Crear una nueva instancia de AssignmentType
+def assignment = new AssignmentType()
+// Crear y configurar la referencia de objeto
+def targetRef = new ObjectReferenceType()
+targetRef.setOid("86d3b462-2334-11ea-bbac-13d84ce0a1df")
+targetRef.setType(RoleType.COMPLEX_TYPE)
+assignment.setTargetRef(targetRef)
+return assignment</code>
+                        </script>
+                    </expression>
+                    <target>
+                        <path>assignment</path>
+                    </target>
+                </inbound>
+            </attribute>
+
+            <attribute>
+                <ref>ri:administrativestatus</ref>
+                <inbound>
+                    <strength>strong</strength>
+                    <expression>
+                        <script>
+                            <code>
+                                import com.evolveum.midpoint.xml.ns._public.common.common_3.ActivationStatusType;
+            
+                                // Obtén el valor de la columna administrativeStatus desde la base de datos
+                                def dbStatus = input
+            
+                                // Mapea los valores de la base de datos a los estados de activación de MidPoint
+                                switch (dbStatus?.toLowerCase()) {
+                                    case 'enabled':
+                                        return ActivationStatusType.ENABLED
+                                    case 'disabled':
+                                        return ActivationStatusType.DISABLED
+                                    case 'archived':
+                                        return ActivationStatusType.ARCHIVED
+                                    default:
+                                        return null  // No asigna ningún valor si no hay un valor válido en la base de datos
+                                }
+                            </code>
+                        </script>
+                    </expression>
+                    <target>
+                        <path>activation/administrativeStatus</path>
+                    </target>
+                </inbound>
+            </attribute>
+            <attribute>
+                <ref>ri:contractexpirydate</ref>
+                <inbound>
+                    <strength>strong</strength>
+                    <expression>
+                        <script>
+                            <code>
+                                def contractExpiryDate = input
+                                if (contractExpiryDate != null) {
+                                    return contractExpiryDate
+                                } else {
+                                    return null
+                                }
+                            </code>
+                        </script>
+                    </expression>
+                    <target>
+                        <path>activation/validTo</path>
+                    </target>
+                </inbound>
+            </attribute>
+
+            <!-- Consolidando la configuración de activation/administrativeStatus -->
+            <activation>
+                <administrativeStatus>
+                    <inbound>
+                        <strength>strong</strength>
+                        <expression>
+                            <script>
+                                <code>
+                                    import com.evolveum.midpoint.xml.ns._public.common.common_3.ActivationStatusType;
+
+                                    // Obtén el valor de la columna administrativeStatus desde la base de datos
+                                    def dbStatus = input
+
+                                    // Mapea los valores de la base de datos a los estados de activación de MidPoint
+                                    switch (dbStatus?.toLowerCase()) {
+                                        case 'enabled':
+                                            return ActivationStatusType.ENABLED
+                                        case 'disabled':
+                                            return ActivationStatusType.DISABLED
+                                        case 'archived':
+                                            return ActivationStatusType.ARCHIVED
+                                        default:
+                                            return null  // No asigna ningún valor si no hay un valor válido en la base de datos
+                                    }
+                                </code>
+                            </script>
+                        </expression>
+                        <target>
+                            <path>activation/administrativeStatus</path>
+                        </target>
+                    </inbound>
+                    <!-- Otro inbound mapeo con fuerza débil -->
+                    <inbound>
+                        <strength>weak</strength>
+                    </inbound>
+                </administrativeStatus>
+            </activation>
+
+            <credentials>
+                <password>
+                    <!--<outbound/>-->
+                    <inbound>
+                        <strength>weak</strength>
+                        <!--Se implementa un mapeo de asignación débil desde 
+                        el recurso fuente para generar contraseñas aleatorias 
+                        solo para nuevos usuarios, preservando contraseñas existentes 
+                        durante operaciones de modificación.
+                        <expression>
+                            <generate/>
+                        </expression> -->
+                        <expression>
+                            <asIs/>
+                        </expression>
+                    </inbound>
+                </password>
+            </credentials>
+
+            <projection>
+                <assignmentPolicyEnforcement>none</assignmentPolicyEnforcement>
+            </projection>
+            
+            <correlation>
+                <correlators>
+                    <items>
+                        <name>Correlate by Employee Number</name>
+                        <description>Match users based on their employee number</description>
+                        <enabled>true</enabled>
+                        <item>
+                            <ref>c:employeeNumber</ref>
+                        </item>
+                        <composition>
+                            <tier>1</tier>
+                            <weight>10.0</weight>
+                        </composition>
+                    </items>
+                </correlators>
+            </correlation>
+            
+            <synchronization>
+                <reaction>
+                    <situation>linked</situation>
+                    <actions>
+                        <synchronize>
+                            <synchronize>true</synchronize>
+                        </synchronize>
+                    </actions>
+                </reaction>
+                <reaction>
+                    <situation>deleted</situation>
+                    <actions>
+                        <deleteFocus>
+                            <synchronize>true</synchronize>
+                        </deleteFocus>
+                    </actions>
+                </reaction>
+                <reaction>
+                    <situation>unlinked</situation>
+                    <actions>
+                        <link>
+                            <synchronize>true</synchronize>
+                        </link>
+                    </actions>
+                </reaction>
+                <reaction>
+                    <situation>unmatched</situation>
+                    <actions>
+                        <addFocus>
+                            <synchronize>true</synchronize>
+                        </addFocus>
+                    </actions>
+                </reaction>
+            </synchronization>          
+        </objectType>
+    </schemaHandling>
+
+    <capabilities xmlns:cap="http://midpoint.evolveum.com/xml/ns/public/resource/capabilities-3">
+        <configured>
+            <cap:activation>
+            <!--Esta sección se configura manualmente.
+            Esta capacidad informa sobre habilitar/deshabilitar el indicador de activación:
+            Aquí hay otro ejemplo. Más info en: https://docs.evolveum.com/midpoint/demo/
+                <cap:status>
+                    <cap:attribute>ri:emptype</cap:attribute>
+                    <cap:enableValue>FTE</cap:enableValue>
+                    <cap:enableValue>PTE</cap:enableValue>
+                    <cap:enableValue>CONTRACTOR</cap:enableValue>
+                    <cap:disableValue>RETIRED</cap:disableValue>
+                    <cap:ignoreAttribute>false</cap:ignoreAttribute>
+                </cap:status> -->
+		            <cap:status>
+		                <cap:attribute>enabled</cap:attribute>
+		                <cap:enableValue>TRUE</cap:enableValue>
+		                <cap:disableValue>FALSE</cap:disableValue>
+		            </cap:status>
+            </cap:activation>
+        </configured>
+    </capabilities>
+
+</resource>
