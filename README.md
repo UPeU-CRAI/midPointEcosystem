@@ -14,30 +14,3 @@ Este proyecto se centra en la construcción y despliegue de un sistema de gesti�
 ### Estructura del Proyecto
 
 Cada plataforma está organizada en su propia carpeta dentro del repositorio, permitiendo su despliegue de manera independiente. Esto proporciona flexibilidad para desarrollar, probar y desplegar cada componente del ecosistema de manera modular y eficiente.
-
-# Extensibilidad del esquema de Midpoint
-Para ampliar el esquema, simplemente copie su archivo XSD en la siguiente ruta del servidor MidPoint:
-
-`/opt/midpoint/var/schema`
-
-### Proceso
-
-```bash
-docker exec -it midpoint_server /bin/bash
-```
-
-```bash
-cd /opt/midpoint/var/schema
-```
-
-```bash
-wget https://raw.githubusercontent.com/UPeU-CRAI/midPointEcosystem/main/initial-objects/schema-extensibility-upeu.xsd
-```
-
-resetear el contenedor Docker de MidPoint:
-
-```bash
-exit
-
-docker restart midpoint_server
-```
