@@ -25,6 +25,6 @@ docker restart midpoint_server
 ```
 
 # Paso 2: Crear resources de los conectores
-Para crear los resources rápidamente se puede importar plantillas de configuración XML como objetos en Midpoint
+Para crear los resources rápidamente se puede importar plantillas de configuración XML como objetos en Midpoint:  
 ADMINISTRATION -> Resoures -> Import Resources definition, Seleccionar Embedder editor y pegar el código del resource correspondiente.
 ![Captura de pantalla 2024-08-19 a la(s) 4 43 01 p  m](https://github.com/user-attachments/assets/3f087b78-ca0a-4114-bfba-55123147b029)
