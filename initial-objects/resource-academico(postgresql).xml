@@ -286,6 +286,8 @@ switch (dbStatus) {
             
             <correlation>
                 <correlators>
+                
+		                <!-- Correlador basado en Employee Number -->
                     <items>
                         <name>Correlate by Employee Number</name>
                         <description>Match users based on their employee number</description>
@@ -297,7 +299,8 @@ switch (dbStatus) {
                             <tier>1</tier>
                             <weight>10.0</weight>
                         </composition>
-                    </items>
+                    </items>                  
+                    
                 </correlators>
             </correlation>
             
