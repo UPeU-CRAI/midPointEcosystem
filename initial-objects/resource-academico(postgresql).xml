@@ -24,7 +24,6 @@
             </q:equal>
           </filter>
     </connectorRef>
-
     <connectorConfiguration>
 
         <icfc:configurationProperties
@@ -167,22 +166,20 @@ return assignment</code>
                     <expression>
                         <script>
                             <code>
-                                import com.evolveum.midpoint.xml.ns._public.common.common_3.ActivationStatusType;
-            
-                                // Obtén el valor de la columna administrativeStatus desde la base de datos
-                                def dbStatus = input
-            
-                                // Mapea los valores de la base de datos a los estados de activación de MidPoint
-                                switch (dbStatus?.toLowerCase()) {
-                                    case 'enabled':
-                                        return ActivationStatusType.ENABLED
-                                    case 'disabled':
-                                        return ActivationStatusType.DISABLED
-                                    case 'archived':
-                                        return ActivationStatusType.ARCHIVED
-                                    default:
-                                        return null  // No asigna ningún valor si no hay un valor válido en la base de datos
-                                }
+import com.evolveum.midpoint.xml.ns._public.common.common_3.ActivationStatusType;
+
+def dbStatus = input?.toLowerCase();
+
+switch (dbStatus) {
+    case 'enabled':
+        return ActivationStatusType.ENABLED;
+    case 'disabled':
+        return ActivationStatusType.DISABLED;
+    case 'archived':
+        return ActivationStatusType.ARCHIVED;
+    default:
+        return null; // Devuelve null para casos no reconocidos
+}
                             </code>
                         </script>
                     </expression>
@@ -249,7 +246,20 @@ return assignment</code>
                         <strength>weak</strength>
                     </inbound>
                 </administrativeStatus>
-            </activation>
+            </activation>                    import com.evolveum.midpoint.xml.ns._public.common.common_3.ActivationStatusType;
+
+                    def dbStatus = input?.toLowerCase();
+
+                    switch (dbStatus) {
+                        case 'enabled':
+                            return ActivationStatusType.ENABLED;
+                        case 'disabled':
+                            return ActivationStatusType.DISABLED;
+                        case 'archived':
+                            return ActivationStatusType.ARCHIVED;
+                        default:
+                            return ActivationStatusType.UNDEFINED; // Para cualquier otro valor
+                    }
 
             <credentials>
                 <password>
@@ -329,26 +339,17 @@ return assignment</code>
     </schemaHandling>
 
     <capabilities xmlns:cap="http://midpoint.evolveum.com/xml/ns/public/resource/capabilities-3">
-        <configured>
-            <cap:activation>
-            <!--Esta sección se configura manualmente.
-            Esta capacidad informa sobre habilitar/deshabilitar el indicador de activación:
-            Aquí hay otro ejemplo. Más info en: https://docs.evolveum.com/midpoint/demo/
-                <cap:status>
-                    <cap:attribute>ri:emptype</cap:attribute>
-                    <cap:enableValue>FTE</cap:enableValue>
-                    <cap:enableValue>PTE</cap:enableValue>
-                    <cap:enableValue>CONTRACTOR</cap:enableValue>
-                    <cap:disableValue>RETIRED</cap:disableValue>
-                    <cap:ignoreAttribute>false</cap:ignoreAttribute>
-                </cap:status> -->
-		            <cap:status>
-		                <cap:attribute>enabled</cap:attribute>
-		                <cap:enableValue>TRUE</cap:enableValue>
-		                <cap:disableValue>FALSE</cap:disableValue>
-		            </cap:status>
-            </cap:activation>
-        </configured>
+				<configured xmlns:cap="http://midpoint.evolveum.com/xml/ns/public/resource/capabilities-3">
+				    <cap:activation>
+				        <cap:status>
+				            <cap:attribute>ri:administrativestatus</cap:attribute>
+				            <cap:enableValue>enabled</cap:enableValue>
+				            <cap:disableValue>disabled</cap:disableValue>
+				            <!-- Deja que otros valores sean manejados por el script en schemaHandling -->
+				            <cap:ignoreAttribute>false</cap:ignoreAttribute>
+				        </cap:status>
+				    </cap:activation>
+				</configured>
     </capabilities>
 
 </resource>
