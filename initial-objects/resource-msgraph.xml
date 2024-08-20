@@ -180,6 +180,24 @@
                 </password>
             </credentials>
 
+	    <correlation>
+                <correlators>
+		                <!-- Correlador basado en Email Address -->
+                    <items>
+                        <name>Correlate by Email Address</name>
+                        <description>Match users based on their email address</description>
+                        <enabled>true</enabled>
+                        <item>
+                            <ref>c:emailAddress</ref>
+                        </item>
+                        <composition>
+                            <tier>1</tier>
+                            <weight>9.0</weight>
+                        </composition>
+                    </items>
+                </correlators>
+            </correlation>
+
             <synchronization>
                 <reaction>
                     <situation>linked</situation>
