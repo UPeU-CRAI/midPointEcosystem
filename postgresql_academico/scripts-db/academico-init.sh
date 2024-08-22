@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS estudiantes (
   countryofresidence          VARCHAR(50),
   creation_date               DATE,
   dateofbirth                 DATE,
-  email                       VARCHAR(100) NOT NULL,
+  email                       VARCHAR(100),
   email2                      VARCHAR(100),
   facultyshortname            VARCHAR(50),
   givenname                   VARCHAR(50),
