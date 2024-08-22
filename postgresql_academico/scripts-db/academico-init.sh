@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS estudiantes (
   provinceofresidence         VARCHAR(50),
   mobile                      VARCHAR(20),
   primaryaffiliation          VARCHAR(20),
-  administrativeStatus        VARCHAR(50)
+  activationstatus        VARCHAR(50)
 );
 
 INSERT INTO estudiantes (
@@ -36,7 +36,7 @@ INSERT INTO estudiantes (
   academicprogrammeshortname, academicprogrammename, cardnumber,
   contractexpirydate, countryofresidence, creation_date, dateofbirth,
   email, email2, facultyshortname, givenname, gender, surname,
-  cityofresidence, postaladdress, provinceofresidence, mobile, primaryaffiliation, administrativeStatus
+  cityofresidence, postaladdress, provinceofresidence, mobile, primaryaffiliation, activationstatus
 ) VALUES
   ('micaela.ricaldi', 'Nena2018$', '515573', 17, 'Sede Lima', 'Presencial',
    'P27', 'EP Ingeniería de Sistemas', '322200011', '2023-05-31', 'Peru', '2023-08-17', '1993-06-01',
@@ -51,47 +51,47 @@ INSERT INTO estudiantes (
   ('edwincq', 'Nena2018$', '8844', 18, 'Sede Lima', 'Presencial',
    'P25', 'EP Ingeniería Civil', '200910457', '2023-11-30', 'Peru', '2023-08-23', '1990-02-17',
    'edwincqu@gmail.com', 'edwincqu@gmail.com', 'FIA', 'EDWIN RENE', 'M', 'CALSIN QUINTO',
-   'Lima', 'Bajada 5 Mz. H', 'Lima', '99999996', 'ESTUDI', 'Undefined'),
+   'Lima', 'Bajada 5 Mz. H', 'Lima', '99999996', 'ESTUDI', 'E'),
 
   ('paulo.huaman', 'Nena2018$', '60665', 17, 'Sede Lima', 'Presencial',
    'P27', 'EP Ingeniería de Sistemas', '202010398', '2023-05-31', 'Peru', '2023-02-20', NULL,
    'pdhc3440@gmail.com', 'pdhc3440@gmail.com', 'FIA', 'Paulo David', 'M', 'Huaman Calderon',
-   'Lima', 'Las colinas', 'Lima', '949191631', 'ESTUDI', 'Undefined'),
+   'Lima', 'Las colinas', 'Lima', '949191631', 'ESTUDI', 'D'),
 
   ('alejandro.lovato', 'Nena2018$', '197027', 17, 'Sede Lima', 'Presencial',
    'P27', 'EP Ingeniería de Sistemas', '202011688', '2023-05-31', 'Peru', '2023-02-17', NULL,
    'alejandro.lovato@colegiounion.edu.pe', 'alejandro.lovato@colegiounion.edu.pe', 'FIA', 'Alejandro', 'M', 'Lovato Huaman',
-   'Lima', '-', 'Lima', '997927631', 'ESTUDI', 'Undefined'),
+   'Lima', '-', 'Lima', '997927631', 'ESTUDI', 'E'),
 
   ('owenmejia', 'Nena2018$', '99655', 1, 'Sede Lima', 'Presencial',
    'P30', 'EP Medicina', '201611794', '2023-08-23', 'Peru', '2023-06-13', '1998-12-02',
    'owenmejia@upeu.edu.pe', 'owenmejia@upeu.edu.pe', 'FCS', 'Owen Miguelich', 'M', 'Mejia Guerra',
-   'Lima', 'sss', 'Lima', '983835274', 'ESTUDI', 'Undefined'),
+   'Lima', 'sss', 'Lima', '983835274', 'ESTUDI', 'D'),
 
   ('marlo', 'Nena2018$', '20145', 17, 'Sede Lima', 'Presencial',
    'P27', 'EP Ingeniería de Sistemas', '200110121', '2023-05-31', 'Peru', '2023-09-01', '1982-03-20',
    'wmarlo@upeu.edu.pe', 'wmarlo@upeu.edu.pe', 'FIA', 'WILDER', 'M', 'MARLO RIMARACHIN',
-   'Lima', 'sssssssssss', 'Lima', '989597311', 'ESTUDI', 'Undefined'),
+   'Lima', 'sssssssssss', 'Lima', '989597311', 'ESTUDI', 'D'),
 
   ('shianefarfan', 'Nena2018$', '50895', 2, 'Sede Lima', 'Presencial',
    'P31', 'EP Nutrición Humana', '201121101', '2023-08-05', 'Peru', '2023-08-18', NULL,
    'shiane.farfan@upeu.pe', 'shiane.farfan@upeu.pe', 'FCS', 'Shiane Lizceth', 'F', 'Farfan Vergara',
-   'Lima', 'shiane.farfan@upeu.pe', 'Lima', '987051852', 'ESTUDI', 'Undefined'),
+   'Lima', 'shiane.farfan@upeu.pe', 'Lima', '987051852', 'ESTUDI', 'D'),
 
   ('deibyjacobchavez', 'Nena2018$', '64030', 17, 'Sede Lima', 'Presencial',
    'P27', 'EP Ingeniería de Sistemas', '201810754', '2023-05-31', 'Peru', '2023-02-20', NULL,
    'alexgamexs@gmail.com', 'alexgamexs@gmail.com', 'FIA', 'Deibyjacob Javier', 'M', 'Chávez Garcia',
-   'Lima', 'alexgamexs@gmail.com', 'Lima', '926597249', 'DOCEN', 'Enabled'),
+   'Lima', 'alexgamexs@gmail.com', 'Lima', '926597249', 'DOCEN', 'E'),
 
   ('sandra.flores', 'Nena2018$', '20919', 2, 'Sede Lima', 'Presencial',
    'P31', 'EP Nutrición Humana', '201321849', '2023-08-05', 'Peru', '2023-08-24', '1996-02-11',
    'sandraflores@upeu.edu.pe', 'sandraflores@upeu.edu.pe', 'FCS', 'Sandra Sadith', 'F', 'Flores Guillen',
-   'Lima', 'sandraflores@upeu.edu.pe', 'Lima', '969332644', 'ESTUDI', 'Enabled'),
+   'Lima', 'sandraflores@upeu.edu.pe', 'Lima', '969332644', 'ESTUDI', 'E'),
 
   ('naoki.san', 'Nena2018$', '777777', 17, 'Sede Lima', 'Presencial',
    'P27', 'EP Ingeniería de Sistemas', '202333333', '2023-12-29', 'Peru', '2023-08-23', '1996-02-12',
    'naoki.san@upeu.edu.pe', 'naoki.san@upeu.edu.pe', 'FIA', 'Naoki', 'F', 'San',
-   'Lima', 'La Era', 'Lima', '994736273', 'ESTUDI', 'Enabled');
+   'Lima', 'La Era', 'Lima', '994736273', 'ESTUDI', 'E');
 
 COMMIT; -- Confirmar la transacción
 EOSQL
