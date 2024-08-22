@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS estudiantes (
   provinceofresidence         VARCHAR(50),
   mobile                      VARCHAR(20),
   primaryaffiliation          VARCHAR(20),
-  activationstatus        VARCHAR(50)
+  activationstatus            VARCHAR(50)
 );
 
 INSERT INTO estudiantes (
