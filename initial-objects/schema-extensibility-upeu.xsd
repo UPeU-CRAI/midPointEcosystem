@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
-<!-- Se trata de un esquema en tiempo de ejecución que define los tipos de datos utilizados
- en la <extensión> de los objetos. Se utiliza en algunas muestras incorporadas. -->
+<!-- Esquema ajustado para la extensión de MidPoint alineado a OpenAIRE y PerúCRIS. -->
 
 <xsd:schema elementFormDefault="qualified"
             targetNamespace="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema"
@@ -17,163 +16,204 @@
             </xsd:appinfo>
         </xsd:annotation>
         <xsd:sequence>
+            <!-- Fecha de Nacimiento - sin equivalente OpenAIRE o PerúCRIS, permanece igual -->
             <xsd:element name="dateOfBirth" type="xsd:dateTime" minOccurs="0" a:maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Fecha de nacimiento</a:displayName>
-                        <a:help>Fecha de nacimiento del estudiante</a:help>
+                        <a:help>Fecha de nacimiento de la persona, formato ISO 8601</a:help>
                         <a:displayOrder>200</a:displayOrder>
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
+
+            <!-- Género - alineado con OpenAIRE y PerúCRIS: Person/Gender -->
             <xsd:element name="gender" type="xsd:string" minOccurs="0" a:maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Género</a:displayName>
-                        <a:help>Género del estudiante</a:help>
+                        <a:help>Género de la persona. Valores aceptados: "M", "F", "O".</a:help>
                         <a:displayOrder>205</a:displayOrder>
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
+
+            <!-- Número de Carnet - sin equivalente OpenAIRE o PerúCRIS, permanece igual -->
             <xsd:element name="cardNumber" type="xsd:string" minOccurs="0" a:maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Número de carnet</a:displayName>
-                        <a:help>Número de carnet universitario del estudiante</a:help>
+                        <a:help>Número de carnet universitario de la persona.</a:help>
                         <a:displayOrder>235</a:displayOrder>
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
+
+            <!-- Fecha de creación - sin equivalente, permanece igual -->
             <xsd:element name="creation_date" type="xsd:dateTime" minOccurs="0" a:maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Fecha de creación</a:displayName>
-                        <a:help>Fecha de creación del usuario</a:help>
+                        <a:help>Fecha de creación del usuario en el sistema, formato ISO 8601.</a:help>
                         <a:displayOrder>245</a:displayOrder>
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
+
+            <!-- Correo Electrónico Secundario - alineado con PerúCRIS: Person/ElectronicAddress -->
             <xsd:element name="email2" type="xsd:string" minOccurs="0" a:maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Correo electrónico secundario</a:displayName>
-                        <a:help>Correo electrónico secundario del estudiante</a:help>
+                        <a:help>Correo electrónico secundario de la persona.</a:help>
                         <a:displayOrder>450</a:displayOrder>
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
+
+            <!-- Sede - sin equivalente en OpenAIRE o PerúCRIS, permanece igual -->
             <xsd:element name="sede" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
-                        <a:displayName>sede</a:displayName>
+                        <a:displayName>Sede</a:displayName>
                         <a:displayOrder>455</a:displayOrder>
-                        <a:help>Sede UPeU</a:help>
+                        <a:help>Sede UPeU a la que pertenece la persona.</a:help>
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
+
+            <!-- Sigla de la facultad - sin equivalente, permanece igual -->
             <xsd:element name="facultyShortName" type="xsd:string" minOccurs="0" a:maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Sigla de la facultad</a:displayName>
+                        <a:help>Sigla de la facultad a la que pertenece la persona.</a:help>
                         <a:displayOrder>460</a:displayOrder>
-                        <a:help>Sigla de la facultad a la que pertenece el estudiante</a:help>
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
+
+            <!-- Código de área o programa académico - sin equivalente OpenAIRE o PerúCRIS, permanece igual -->
             <xsd:element name="jobCode" type="xsd:string" minOccurs="0" a:maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
-                        <a:displayName>Job code</a:displayName>
+                        <a:displayName>Código del área/programa académico</a:displayName>
+                        <a:help>Código de área o programa académico al que pertenece la persona.</a:help>
                         <a:displayOrder>470</a:displayOrder>
-                        <a:help>
-                            Código de area o código de programa académico
-                        </a:help>
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
+
+            <!-- Nombre del programa académico codificado - sin equivalente, permanece igual -->
             <xsd:element name="academicProgrammeShortName" type="xsd:string" minOccurs="0" a:maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
-                        <a:displayName>program short name</a:displayName>
+                        <a:displayName>Sigla del programa académico</a:displayName>
+                        <a:help>Nombre codificado del programa académico registrado en SUNEDU.</a:help>
                         <a:displayOrder>475</a:displayOrder>
-                        <a:help>
-                            Nombre codificado del programa académico registrado en Sunedu
-                        </a:help>
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
+
+            <!-- Nombre del programa académico - sin equivalente, permanece igual -->
             <xsd:element name="academicProgrammeName" type="xsd:string" minOccurs="0" a:maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
-                        <a:displayName>Nombre del programa</a:displayName>
+                        <a:displayName>Nombre del programa académico</a:displayName>
+                        <a:help>Nombre completo del programa académico al que pertenece la persona.</a:help>
                         <a:displayOrder>480</a:displayOrder>
-                        <a:help>Nombre del programa académico del estudiante</a:help>
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
+
+            <!-- Modalidad de estudio - sin equivalente OpenAIRE o PerúCRIS, permanece igual -->
             <xsd:element name="modalidad_estudio" type="xsd:string" minOccurs="0" a:maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Modalidad de estudio</a:displayName>
-                        <a:help>Modalidad de estudio del estudiante</a:help>
+                        <a:help>Modalidad de estudio de la persona (presencial, virtual, etc.).</a:help>
                         <a:displayOrder>485</a:displayOrder>
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
+
+            <!-- Fecha de vencimiento del contrato - sin equivalente OpenAIRE o PerúCRIS, permanece igual -->
             <xsd:element name="contractExpiryDate" type="xsd:dateTime" minOccurs="0" a:maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Fecha de vencimiento del contrato</a:displayName>
+                        <a:help>Fecha de vencimiento del contrato de la persona, formato ISO 8601.</a:help>
                         <a:displayOrder>490</a:displayOrder>
-                        <a:help>Fecha de vencimiento del contrato del estudiante</a:help>
                     </xsd:appinfo>
                 </xsd:annotation>
-            </xsd:element>            
+            </xsd:element>
+
+            <!-- País de Residencia - alineado con PerúCRIS: Código ISO 3166 -->
             <xsd:element name="countryOfResidence" type="xsd:string" minOccurs="0" a:maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
-                        <a:displayName>País</a:displayName>
-                        <a:help>País de residencia del estudiante</a:help>
+                        <a:displayName>País de residencia</a:displayName>
+                        <a:help>Código ISO 3166 del país de residencia.</a:help>
                         <a:displayOrder>495</a:displayOrder>
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
+
+            <!-- Provincia de Residencia - sin equivalente OpenAIRE, permanece igual -->
             <xsd:element name="provinceOfResidence" type="xsd:string" minOccurs="0" a:maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
-                        <a:displayName>Provincia</a:displayName>
-                        <a:help>Region donde vive el estudiante</a:help>
+                        <a:displayName>Provincia de residencia</a:displayName>
+                        <a:help>Provincia donde vive la persona.</a:help>
                         <a:displayOrder>500</a:displayOrder>
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
+
+            <!-- Ciudad de Residencia - sin equivalente OpenAIRE, permanece igual -->
             <xsd:element name="cityOfResidence" type="xsd:string" minOccurs="0" a:maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
-                        <a:displayName>Ciudad</a:displayName>
-                        <a:help>Ciudad donde vive el estudiante</a:help>
-                        <a:displayOrder>501</a:displayOrder>
-                    </xsd:appinfo>
-                </xsd:annotation>
-            </xsd:element>              
-            <xsd:element name="postalAddress" type="xsd:string" minOccurs="0" a:maxOccurs="1">
-                <xsd:annotation>
-                    <xsd:appinfo>
-                        <a:displayName>postal address</a:displayName>
-                        <a:help>Dirección del estudiante</a:help>
+                        <a:displayName>Ciudad de residencia</a:displayName>
+                        <a:help>Ciudad donde vive la persona.</a:help>
                         <a:displayOrder>505</a:displayOrder>
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
+
+            <!-- Dirección Postal - sin equivalente OpenAIRE o PerúCRIS, permanece igual -->
+            <xsd:element name="postalAddress" type="xsd:string" minOccurs="0" a:maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Dirección postal</a:displayName>
+                        <a:help>Dirección postal de la persona.</a:help>
+                        <a:displayOrder>510</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Afiliación Principal - alineado con OpenAIRE y PerúCRIS: Person/Affiliation -->
             <xsd:element name="primaryAffiliation" type="xsd:string" minOccurs="0" a:maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Afiliación principal</a:displayName>
-                        <a:help>Relación principal de la persona con la institución. Ej, profesores, estudiantes, personal, alumnos, miembros, afiliados, empleados, asistentes a la biblioteca, exalumno, etc</a:help>
-                        <a:displayOrder>506</a:displayOrder>
+                        <a:help>Relación principal de la persona con la institución (profesor, estudiante, etc.).</a:help>
+                        <a:displayOrder>515</a:displayOrder>
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
+
+            <!-- ORCID - alineado con OpenAIRE y PerúCRIS: Person/ORCID -->
+            <xsd:element name="ORCID" type="xsd:string" minOccurs="0" a:maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>ORCID</a:displayName>
+                        <a:help>Identificador ORCID del investigador, formato ORCID</a:help>
+                        <a:displayOrder>510</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+         
         </xsd:sequence>
     </xsd:complexType>
 
