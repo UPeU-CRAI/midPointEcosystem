@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 
-<!-- Esquema ajustado para la extensión de MidPoint alineado a OpenAIRE y PerúCRIS. -->
+<!-- Esquema completo ajustado para la extensión de MidPoint alineado a OpenAIRE y PerúCRIS. -->
 
 <xsd:schema elementFormDefault="qualified"
             targetNamespace="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema"
@@ -16,7 +16,7 @@
             </xsd:appinfo>
         </xsd:annotation>
         <xsd:sequence>
-            <!-- Fecha de Nacimiento - sin equivalente OpenAIRE o PerúCRIS, permanece igual -->
+            <!-- Fecha de Nacimiento -->
             <xsd:element name="dateOfBirth" type="xsd:dateTime" minOccurs="0" maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -38,7 +38,7 @@
                 </xsd:annotation>
             </xsd:element>
 
-            <!-- Número de Carnet - sin equivalente OpenAIRE o PerúCRIS, permanece igual -->
+            <!-- Número de Carnet -->
             <xsd:element name="cardNumber" type="xsd:string" minOccurs="0" maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -49,7 +49,7 @@
                 </xsd:annotation>
             </xsd:element>
 
-            <!-- Fecha de creación - sin equivalente, permanece igual -->
+            <!-- Fecha de creación -->
             <xsd:element name="creation_date" type="xsd:dateTime" minOccurs="0" maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -60,7 +60,7 @@
                 </xsd:annotation>
             </xsd:element>
 
-            <!-- Correo Electrónico Secundario - alineado con PerúCRIS: Person/ElectronicAddress -->
+            <!-- Correo Electrónico Secundario -->
             <xsd:element name="email2" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -71,7 +71,7 @@
                 </xsd:annotation>
             </xsd:element>
 
-            <!-- Sede - sin equivalente en OpenAIRE o PerúCRIS, permanece igual -->
+            <!-- Sede -->
             <xsd:element name="sede" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -82,7 +82,7 @@
                 </xsd:annotation>
             </xsd:element>
 
-            <!-- Sigla de la facultad - sin equivalente, permanece igual -->
+            <!-- Sigla de la facultad -->
             <xsd:element name="facultyShortName" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -93,7 +93,7 @@
                 </xsd:annotation>
             </xsd:element>
 
-            <!-- Código de área o programa académico - sin equivalente OpenAIRE o PerúCRIS, permanece igual -->
+            <!-- Código de área o programa académico -->
             <xsd:element name="jobCode" type="xsd:string" minOccurs="0" maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -104,7 +104,7 @@
                 </xsd:annotation>
             </xsd:element>
 
-            <!-- Nombre del programa académico codificado - sin equivalente, permanece igual -->
+            <!-- Nombre del programa académico codificado -->
             <xsd:element name="academicProgrammeShortName" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -115,7 +115,7 @@
                 </xsd:annotation>
             </xsd:element>
 
-            <!-- Nombre del programa académico - sin equivalente, permanece igual -->
+            <!-- Nombre del programa académico -->
             <xsd:element name="academicProgrammeName" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -126,7 +126,7 @@
                 </xsd:annotation>
             </xsd:element>
 
-            <!-- Modalidad de estudio - sin equivalente OpenAIRE o PerúCRIS, permanece igual -->
+            <!-- Modalidad de estudio -->
             <xsd:element name="modalidad_estudio" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -137,7 +137,7 @@
                 </xsd:annotation>
             </xsd:element>
 
-            <!-- Fecha de vencimiento del contrato - sin equivalente OpenAIRE o PerúCRIS, permanece igual -->
+            <!-- Fecha de vencimiento del contrato -->
             <xsd:element name="contractExpiryDate" type="xsd:dateTime" minOccurs="0" maxOccurs="unbounded">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -148,7 +148,7 @@
                 </xsd:annotation>
             </xsd:element>
 
-            <!-- País de Residencia - alineado con PerúCRIS: Código ISO 3166 -->
+            <!-- País de Residencia -->
             <xsd:element name="countryOfResidence" type="xsd:string" minOccurs="0" maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -159,7 +159,7 @@
                 </xsd:annotation>
             </xsd:element>
 
-            <!-- Provincia de Residencia - sin equivalente OpenAIRE, permanece igual -->
+            <!-- Provincia de Residencia -->
             <xsd:element name="provinceOfResidence" type="xsd:string" minOccurs="0" maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -170,7 +170,7 @@
                 </xsd:annotation>
             </xsd:element>
 
-            <!-- Ciudad de Residencia - sin equivalente OpenAIRE, permanece igual -->
+            <!-- Ciudad de Residencia -->
             <xsd:element name="cityOfResidence" type="xsd:string" minOccurs="0" maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -181,7 +181,7 @@
                 </xsd:annotation>
             </xsd:element>
 
-            <!-- Dirección Postal - sin equivalente OpenAIRE o PerúCRIS, permanece igual -->
+            <!-- Dirección Postal -->
             <xsd:element name="postalAddress" type="xsd:string" minOccurs="0" maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -192,7 +192,7 @@
                 </xsd:annotation>
             </xsd:element>
 
-            <!-- Afiliación Principal - alineado con OpenAIRE y PerúCRIS: Person/Affiliation -->
+            <!-- Afiliación Principal -->
             <xsd:element name="primaryAffiliation" type="xsd:string" minOccurs="0" maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -203,7 +203,7 @@
                 </xsd:annotation>
             </xsd:element>
 
-            <!-- ORCID - alineado con OpenAIRE y PerúCRIS: Person/ORCID -->
+            <!-- ORCID -->
             <xsd:element name="ORCID" type="xsd:string" minOccurs="0" maxOccurs="1">
                 <xsd:annotation>
                     <xsd:appinfo>
@@ -213,7 +213,62 @@
                     </xsd:appinfo>
                 </xsd:annotation>
             </xsd:element>
-         
+            
+            <!-- Identificador Nacional (DNI, RUC) -->
+            <xsd:element name="identifier" type="xsd:string" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Identificador personal</a:displayName>
+                        <a:help>Identificador único de la persona (DNI o RUC).</a:help>
+                        <a:displayOrder>525</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Premios y Reconocimientos -->
+            <xsd:element name="awards" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Premios y Reconocimientos</a:displayName>
+                        <a:help>Premios y reconocimientos obtenidos por la persona.</a:help>
+                        <a:displayOrder>530</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Proyectos de Investigación -->
+            <xsd:element name="projectParticipation" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Participación en proyectos</a:displayName>
+                        <a:help>Proyectos de investigación en los que participa o ha participado la persona.</a:help>
+                        <a:displayOrder>535</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Patentes -->
+            <xsd:element name="patents" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Patentes</a:displayName>
+                        <a:help>Patentes registradas por la persona.</a:help>
+                        <a:displayOrder>540</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Publicaciones -->
+            <xsd:element name="publications" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Publicaciones</a:displayName>
+                        <a:help>Publicaciones realizadas por la persona.</a:help>
+                        <a:displayOrder>545</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
         </xsd:sequence>
     </xsd:complexType>
 
