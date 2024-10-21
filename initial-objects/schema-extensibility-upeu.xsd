@@ -21,7 +21,7 @@
                 <xsd:annotation>
                     <xsd:appinfo>
                         <a:displayName>Fecha de nacimiento</a:displayName>
-                        <a:help>Fecha de nacimiento de la persona, formato ISO 8601</a:help>
+                        <a:help>Fecha de nacimiento de la persona, formato ISO 8601 YYYY-MM-DD</a:help>
                         <a:displayOrder>200</a:displayOrder>
                     </xsd:appinfo>
                 </xsd:annotation>
