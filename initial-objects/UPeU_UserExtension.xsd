@@ -1,0 +1,292 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!--
+    Archivo de extensión de esquema de MidPoint ajustado para UPeU, alineado a OpenAIRE y PerúCRIS.
+    Excluye atributos presentes en UPeU_UserExtension.xsd.
+    
+    Nombre del archivo: UserExtensionUPeU.xsd
+-->
+
+<xsd:schema elementFormDefault="qualified"
+            targetNamespace="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema"
+            xmlns:tns="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema"
+            xmlns:a="http://prism.evolveum.com/xml/ns/public/annotation-3"
+            xmlns:c="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:complexType name="UserExtensionType">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <a:extension ref="c:UserType"/>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+
+            <!-- Fecha de Nacimiento -->
+            <xsd:element name="dateOfBirth" type="xsd:dateTime" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Fecha de nacimiento</a:displayName>
+                        <a:help>Fecha de nacimiento de la persona, formato ISO 8601 YYYY-MM-DD</a:help>
+                        <a:displayOrder>200</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Género -->
+            <xsd:element name="gender" type="xsd:string" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Género</a:displayName>
+                        <a:help>Género de la persona. Valores aceptados: "M", "F", "O".</a:help>
+                        <a:displayOrder>205</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Número de Carnet -->
+            <xsd:element name="cardNumber" type="xsd:string" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Número de carnet</a:displayName>
+                        <a:help>Número de carnet universitario de la persona.</a:help>
+                        <a:displayOrder>235</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Fecha de creación -->
+            <xsd:element name="creation_date" type="xsd:dateTime" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Fecha de creación</a:displayName>
+                        <a:help>Fecha de creación del usuario en el sistema, formato ISO 8601.</a:help>
+                        <a:displayOrder>245</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Correo Electrónico Secundario -->
+            <xsd:element name="email2" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Correo electrónico secundario</a:displayName>
+                        <a:help>Correo electrónico secundario de la persona.</a:help>
+                        <a:displayOrder>450</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Sede -->
+            <xsd:element name="sede" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Sede</a:displayName>
+                        <a:displayOrder>455</a:displayOrder>
+                        <a:help>Sede UPeU a la que pertenece la persona.</a:help>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Sigla de la facultad -->
+            <xsd:element name="facultyShortName" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Sigla de la facultad</a:displayName>
+                        <a:help>Sigla de la facultad a la que pertenece la persona.</a:help>
+                        <a:displayOrder>460</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Código de área o programa académico -->
+            <xsd:element name="jobCode" type="xsd:string" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Código del área/programa académico</a:displayName>
+                        <a:help>Código de área o programa académico al que pertenece la persona.</a:help>
+                        <a:displayOrder>470</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Nombre del programa académico codificado -->
+            <xsd:element name="academicProgrammeShortName" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Sigla del programa académico</a:displayName>
+                        <a:help>Nombre codificado del programa académico registrado en SUNEDU.</a:help>
+                        <a:displayOrder>475</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Nombre del programa académico -->
+            <xsd:element name="academicProgrammeName" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Nombre del programa académico</a:displayName>
+                        <a:help>Nombre completo del programa académico al que pertenece la persona.</a:help>
+                        <a:displayOrder>480</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Modalidad de estudio -->
+            <xsd:element name="modalidad_estudio" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Modalidad de estudio</a:displayName>
+                        <a:help>Modalidad de estudio de la persona (presencial, virtual, etc.).</a:help>
+                        <a:displayOrder>485</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Fecha de vencimiento del contrato -->
+            <xsd:element name="contractExpiryDate" type="xsd:dateTime" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Fecha de vencimiento del contrato</a:displayName>
+                        <a:help>Fecha de vencimiento del contrato de la persona, formato ISO 8601.</a:help>
+                        <a:displayOrder>490</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- País de Residencia -->
+            <xsd:element name="countryOfResidence" type="xsd:string" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>País de residencia</a:displayName>
+                        <a:help>Código ISO 3166 del país de residencia.</a:help>
+                        <a:displayOrder>495</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Provincia de Residencia -->
+            <xsd:element name="provinceOfResidence" type="xsd:string" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Provincia de residencia</a:displayName>
+                        <a:help>Provincia donde vive la persona.</a:help>
+                        <a:displayOrder>500</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Ciudad de Residencia -->
+            <xsd:element name="cityOfResidence" type="xsd:string" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Ciudad de residencia</a:displayName>
+                        <a:help>Ciudad donde vive la persona.</a:help>
+                        <a:displayOrder>505</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Dirección Postal -->
+            <xsd:element name="postalAddress" type="xsd:string" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Dirección postal</a:displayName>
+                        <a:help>Dirección postal de la persona.</a:help>
+                        <a:displayOrder>510</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Afiliación Principal -->
+            <xsd:element name="primaryAffiliation" type="xsd:string" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Afiliación principal</a:displayName>
+                        <a:help>Relación principal de la persona con la institución (profesor, estudiante, etc.).</a:help>
+                        <a:displayOrder>515</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Identificador Nacional (DNI, RUC) -->
+            <xsd:element name="identifier" type="xsd:string" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Identificador personal</a:displayName>
+                        <a:help>Identificador único de la persona (DNI o RUC).</a:help>
+                        <a:displayOrder>525</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Premios y Reconocimientos -->
+            <xsd:element name="awards" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Premios y Reconocimientos</a:displayName>
+                        <a:help>Premios y reconocimientos obtenidos por la persona.</a:help>
+                        <a:displayOrder>530</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Proyectos de Investigación -->
+            <xsd:element name="projectParticipation" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Participación en proyectos</a:displayName>
+                        <a:help>Proyectos de investigación en los que participa o ha participado la persona.</a:help>
+                        <a:displayOrder>535</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Patentes -->
+            <xsd:element name="patents" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Patentes</a:displayName>
+                        <a:help>Patentes registradas por la persona.</a:help>
+                        <a:displayOrder>540</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Publicaciones -->
+            <xsd:element name="publications" type="xsd:string" minOccurs="0" maxOccurs="unbounded">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Publicaciones</a:displayName>
+                        <a:help>Publicaciones realizadas por la persona.</a:help>
+                        <a:displayOrder>545</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="RoleExtensionType">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <a:extension ref="c:RoleType"/>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="autoassignJobCode" type="xsd:string" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Autoassign job code</a:displayName>
+                        <a:help>
+                            Código de trabajo para la autoasignación de roles.
+                            Los roles que tengan especificado este job code serán automáticamente
+                            asignados a los usuarios que tengan el mismo job code.
+                        </a:help>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+    </xsd:complexType>
+
+</xsd:schema>
