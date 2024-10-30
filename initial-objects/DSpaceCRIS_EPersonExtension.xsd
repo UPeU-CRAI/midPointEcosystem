@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+
+<!--
+    Archivo de extensión de esquema de MidPoint específico para los atributos del endpoint 
+    GET /api/eperson/epersons de DSpace-CRIS.
+    
+    Este esquema extiende los atributos de usuario (UserType) en MidPoint para incluir 
+    propiedades específicas utilizadas en DSpace-CRIS, como atributos de sincronización 
+    ORCID, configuraciones de perfil, y visibilidad de perfiles de investigadores.
+    
+    Nombre del archivo: DSpaceCRIS_EPersonExtension.xsd
+-->
+
+<xsd:schema elementFormDefault="qualified"
+            targetNamespace="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema"
+            xmlns:tns="https://midpoint.upeu.edu.pe/xml/ns/midpoint/schema"
+            xmlns:a="http://prism.evolveum.com/xml/ns/public/annotation-3"
+            xmlns:c="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
+            xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+    <xsd:complexType name="DSpaceCRIS_EPersonExtensionType">
+        <xsd:annotation>
+            <xsd:appinfo>
+                <a:extension ref="c:UserType"/>
+            </xsd:appinfo>
+        </xsd:annotation>
+        <xsd:sequence>
+
+            <!-- Identificador ORCID del investigador -->
+            <xsd:element name="orcid" type="xsd:string" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>ORCID</a:displayName>
+                        <a:help>Identificador ORCID del investigador, en formato ORCID.</a:help>
+                        <a:displayOrder>520</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Sincronización con ORCID: modo de sincronización y preferencias -->
+            <xsd:element name="orcidSynchronization" type="xsd:string" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Modo de sincronización ORCID</a:displayName>
+                        <a:help>Modo de sincronización con ORCID: MANUAL o BATCH.</a:help>
+                        <a:displayOrder>525</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Preferencias de sincronización ORCID para tipos de información -->
+            <xsd:element name="orcidPreferences" type="xsd:string" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Preferencias ORCID</a:displayName>
+                        <a:help>Preferencias de sincronización de ORCID (publicaciones, proyectos, etc.).</a:help>
+                        <a:displayOrder>530</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Visibilidad del perfil del usuario -->
+            <xsd:element name="profileVisibility" type="xsd:boolean" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Visibilidad de perfil</a:displayName>
+                        <a:help>Controla si el perfil del usuario es visible para el público.</a:help>
+                        <a:displayOrder>535</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- ID de NetID del usuario en DSpace -->
+            <xsd:element name="netid" type="xsd:string" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>NetID</a:displayName>
+                        <a:help>Identificador de red del usuario en DSpace (NetID).</a:help>
+                        <a:displayOrder>540</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Última actividad registrada del usuario en el sistema -->
+            <xsd:element name="lastActive" type="xsd:dateTime" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Última actividad</a:displayName>
+                        <a:help>Fecha y hora de la última actividad del usuario en el sistema.</a:help>
+                        <a:displayOrder>545</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Control de acceso: si el usuario puede iniciar sesión -->
+            <xsd:element name="canLogIn" type="xsd:boolean" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Puede iniciar sesión</a:displayName>
+                        <a:help>Indica si el usuario tiene permiso para iniciar sesión.</a:help>
+                        <a:displayOrder>550</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Certificado requerido para el inicio de sesión -->
+            <xsd:element name="requireCertificate" type="xsd:boolean" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Certificado requerido</a:displayName>
+                        <a:help>Indica si el usuario requiere un certificado para iniciar sesión.</a:help>
+                        <a:displayOrder>555</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+            <!-- Estado de auto-registro del usuario en DSpace -->
+            <xsd:element name="selfRegistered" type="xsd:boolean" minOccurs="0" maxOccurs="1">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:displayName>Auto-registrado</a:displayName>
+                        <a:help>Indica si el usuario se ha registrado por sí mismo en el sistema.</a:help>
+                        <a:displayOrder>560</a:displayOrder>
+                    </xsd:appinfo>
+                </xsd:annotation>
+            </xsd:element>
+
+        </xsd:sequence>
+    </xsd:complexType>
+
+</xsd:schema>
