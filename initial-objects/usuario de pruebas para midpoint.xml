@@ -1,0 +1,113 @@
+<user xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3" xmlns:c="http://midpoint.evolveum.com/xml/ns/public/common/common-3" xmlns:icfs="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/resource-schema-3" xmlns:org="http://midpoint.evolveum.com/xml/ns/public/common/org-3" xmlns:q="http://prism.evolveum.com/xml/ns/public/query-3" xmlns:ri="http://midpoint.evolveum.com/xml/ns/public/resource/instance-3" xmlns:t="http://prism.evolveum.com/xml/ns/public/types-3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" oid="a64baef0-ffae-468d-9c1b-95609e321f14" version="1">
+    <_metadata id="2">
+        <storage>
+            <createTimestamp>2025-06-08T14:38:39.369Z</createTimestamp>
+            <creatorRef oid="00000000-0000-0000-0000-000000000002" relation="org:default" type="c:UserType">
+                <!-- administrator -->
+            </creatorRef>
+            <createChannel>http://midpoint.evolveum.com/xml/ns/public/common/channels-3#user</createChannel>
+        </storage>
+        <process>
+            <requestTimestamp>2025-06-08T14:38:39.301Z</requestTimestamp>
+            <requestorRef oid="00000000-0000-0000-0000-000000000002" relation="org:default" type="c:UserType">
+                <!-- administrator -->
+            </requestorRef>
+        </process>
+    </_metadata>
+    <name>hannah.montana</name>
+    <extension xmlns:upeuPerson="http://crai.upeu.edu.pe/xml/ns/midpoint/extension/person/v1">
+        <upeuPerson:taxId>23445656678</upeuPerson:taxId>
+        <upeuPerson:universityIdCard>202385768</upeuPerson:universityIdCard>
+        <upeuPerson:branchCode>BUL</upeuPerson:branchCode>
+        <upeuPerson:categoryId>DOCEN</upeuPerson:categoryId>
+    </extension>
+    <operationExecution id="7">
+        <recordType>simple</recordType>
+        <timestamp>2025-06-08T14:38:39.410Z</timestamp>
+        <operation>
+            <objectDelta>
+                <t:changeType>add</t:changeType>
+                <t:objectType>c:UserType</t:objectType>
+            </objectDelta>
+            <executionResult>
+                <operation>com.evolveum.midpoint.model.impl.lens.ChangeExecutor.executeDelta</operation>
+                <status>success</status>
+                <importance>normal</importance>
+                <token>1000000000000087895</token>
+            </executionResult>
+            <objectName>hannah.montana</objectName>
+        </operation>
+        <status>success</status>
+        <initiatorRef oid="00000000-0000-0000-0000-000000000002" relation="org:default" type="c:UserType">
+            <!-- administrator -->
+        </initiatorRef>
+        <channel>http://midpoint.evolveum.com/xml/ns/public/common/channels-3#user</channel>
+    </operationExecution>
+    <assignment id="1">
+        <_metadata id="3">
+            <storage>
+                <createTimestamp>2025-06-08T14:38:39.369Z</createTimestamp>
+                <creatorRef oid="00000000-0000-0000-0000-000000000002" relation="org:default" type="c:UserType">
+                    <!-- administrator -->
+                </creatorRef>
+                <createChannel>http://midpoint.evolveum.com/xml/ns/public/common/channels-3#user</createChannel>
+            </storage>
+            <process>
+                <requestTimestamp>2025-06-08T14:38:39.301Z</requestTimestamp>
+                <requestorRef oid="00000000-0000-0000-0000-000000000002" relation="org:default" type="c:UserType">
+                    <!-- administrator -->
+                </requestorRef>
+            </process>
+            <provenance>
+                <acquisition id="4">
+                    <actorRef oid="00000000-0000-0000-0000-000000000002" relation="org:default" type="c:UserType">
+                        <!-- administrator -->
+                    </actorRef>
+                    <channel>http://midpoint.evolveum.com/xml/ns/public/common/channels-3#user</channel>
+                    <timestamp>2025-06-08T14:38:39.300Z</timestamp>
+                </acquisition>
+            </provenance>
+        </_metadata>
+        <targetRef oid="00000000-0000-0000-0000-000000000702" relation="org:default" type="c:ArchetypeType">
+            <!-- Person -->
+        </targetRef>
+        <activation>
+            <effectiveStatus>enabled</effectiveStatus>
+        </activation>
+    </assignment>
+    <iteration>0</iteration>
+    <iterationToken/>
+    <archetypeRef oid="00000000-0000-0000-0000-000000000702" relation="org:default" type="c:ArchetypeType">
+        <!-- Person -->
+    </archetypeRef>
+    <roleMembershipRef oid="00000000-0000-0000-0000-000000000702" relation="org:default" type="c:ArchetypeType">
+        <!-- Person -->
+        <_metadata id="5">
+            <storage>
+                <createTimestamp>2025-06-08T14:38:39.358Z</createTimestamp>
+            </storage>
+            <provenance>
+                <assignmentPath>
+                    <sourceRef oid="a64baef0-ffae-468d-9c1b-95609e321f14" relation="org:default" type="c:UserType">
+                        <!-- hannah.montana -->
+                    </sourceRef>
+                    <segment id="6">
+                        <segmentOrder>1</segmentOrder>
+                        <assignmentId>1</assignmentId>
+                        <targetRef oid="00000000-0000-0000-0000-000000000702" relation="org:default" type="c:ArchetypeType">
+                            <!-- Person -->
+                        </targetRef>
+                        <matchingOrder>true</matchingOrder>
+                    </segment>
+                </assignmentPath>
+            </provenance>
+        </_metadata>
+    </roleMembershipRef>
+    <activation>
+        <effectiveStatus>enabled</effectiveStatus>
+        <enableTimestamp>2025-06-08T14:38:39.311Z</enableTimestamp>
+    </activation>
+    <fullName>Hannah Montana</fullName>
+    <givenName>Hannah</givenName>
+    <familyName>Montana</familyName>
+</user>
