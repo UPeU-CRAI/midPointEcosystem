@@ -1,1 +1,216 @@
-<div contenteditable="true" translate="no" class="ProseMirror"><h1>Esquema de Extensión de Midpoint para la UPeU (Versión 3.0)</h1><h2>1. Visión General</h2><p>Este documento describe la arquitectura y el contenido del <strong>Esquema de Extensión para Personas UPeU</strong>, un modelo de datos maestro diseñado para actuar como la <strong>fuente única de la verdad (Single Source of Truth)</strong> para la identidad digital de todos los individuos en el ecosistema de la <span class="selected">Universidad</span> Peruana Unión.</p><p>La arquitectura de este esquema es <strong>holística, estandarizada y escalable</strong>, permitiendo la integración de diversas plataformas como Koha, DSpace CRIS, OJS, Indico, sistemas de RRHH, portales académicos y financieros.</p><h2>2. Principios de Arquitectura y Diseño</h2><p>El esquema se construye siguiendo una filosofía de prioridades claras para garantizar la estandarización y evitar la redundancia:</p><ol><li><p><strong>Nativo de Midpoint Primero:</strong> Se reutilizan al máximo los atributos estándar que Midpoint ofrece para <code>UserType</code>.</p></li><li><p><strong>Estándares Globales (schema.org):</strong> Para conceptos comunes que no son nativos en Midpoint, se adoptan las definiciones del vocabulario de <code>schema.org/Person</code>.</p></li><li><p><strong>Estándares Nacionales:</strong> Se incorporan atributos específicos de los estándares peruanos de investigación y académicos (ej. CONCYTEC).</p></li><li><p><strong>Atributos Específicos de Aplicación:</strong> Únicamente los atributos que solo tienen sentido dentro de una plataforma concreta se aíslan en su propia sección para mantener el modelo limpio.</p></li></ol><h2>3. Arquitectura de Capas (Definitions)</h2><p>El esquema está organizado en capas lógicas utilizando <code>Definitions</code> de Midpoint. Esto permite una clara separación de intereses y facilita la gestión y escalabilidad.</p><ul><li><p><strong><code>identity</code></strong>: Contiene los identificadores únicos y oficiales de una persona.</p></li><li><p><strong><code>personDetails</code></strong>: Almacena atributos demográficos y personales genéricos.</p></li><li><p><strong><code>employment</code></strong>: Guarda información sobre la relación laboral, contractual y de afiliación.</p></li><li><p><strong><code>academic</code></strong>: Centraliza el perfil de investigador y académico.</p></li><li><p><strong><code>peruStandards</code></strong>: Aloja identificadores de los estándares nacionales de Perú.</p></li><li><p><strong><code>[nombre_sistema]</code></strong>: Definiciones específicas para cada plataforma integrada (ej. <code>koha</code>, <code>ojs</code>, <code>indico</code>, <code>dspaceCris</code>).</p></li></ul><h2>4. Arquitectura del Conector Java</h2><p>El código fuente del conector ha sido refactorizado siguiendo una arquitectura modular y principios de diseño SOLID para mejorar la mantenibilidad, legibilidad y testeabilidad. La estructura se organiza de la siguiente manera:</p><ul><li><p><strong><code>RestUsersConnector.java</code> (Orquestador):</strong> Es la clase principal y punto de entrada que implementa las interfaces de ConnId. Su única responsabilidad es orquestar las operaciones, delegando el trabajo pesado a componentes especializados.</p></li><li><p><strong>Paquete <code>model</code>:</strong></p><ul><li><p><code>AttributeMetadata.java</code>: Una clase POJO que define la estructura para los metadatos de los atributos, desacoplando la definición del atributo de su lógica de mapeo.</p></li></ul></li><li><p><strong>Clase <code>KohaAuthenticator.java</code>:</strong> Centraliza toda la lógica de autenticación (Basic y OAuth2). Crea un cliente HTTP pre-configurado que añade automáticamente las cabeceras de <code>Authorization</code> a cada petición, desacoplando los servicios de los detalles de autenticación.</p></li><li><p><strong>Paquete <code>services</code>:</strong></p><ul><li><p><code>PatronService.java</code> y <code>CategoryService.java</code>: Contienen la lógica de negocio para cada tipo de objeto. Son responsables de construir las peticiones HTTP, interactuar con los endpoints específicos de la API de Koha y manejar las respuestas. No tienen conocimiento de la autenticación.</p></li></ul></li><li><p><strong>Paquete <code>mappers</code>:</strong></p><ul><li><p><code>BaseMapper.java</code>, <code>PatronMapper.java</code>, <code>CategoryMapper.java</code>: Son los especialistas en la transformación de datos. Convierten los objetos <code>ConnectorObject</code> de Midpoint a formato JSON para enviar a la API, y viceversa. Contienen el "diccionario" de atributos y sus mapeos.</p></li></ul></li></ul><p>Esta separación de responsabilidades hace que el conector sea robusto y fácil de extender para futuras integraciones.</p><h2>5. Diccionario de Atributos del Esquema (<code>upeuPerson</code>)</h2><p>Esta sección detalla todos los atributos utilizados en el modelo de identidad de la UPeU.</p><h3>5.1. Atributos Nativos de Midpoint (Usados Directamente)</h3><ul><li><p><strong><code>givenName</code></strong>: Nombres.</p></li><li><p><strong><code>familyName</code></strong>: Apellidos.</p></li><li><p><strong><code>additionalName</code></strong>: Segundo nombre.</p></li><li><p><strong><code>honorificPrefix</code></strong>: Prefijo honorífico (Dr., Ing.).</p></li><li><p><strong><code>honorificSuffix</code></strong>: Sufijo honorífico (PhD, M.Sc.).</p></li><li><p><strong><code>emailAddress</code></strong>: Email principal.</p></li><li><p><strong><code>telephoneNumber</code></strong>: Teléfono principal.</p></li><li><p><strong><code>mobile</code></strong>: Teléfono móvil.</p></li><li><p><strong><code>fax</code></strong>: Número de fax.</p></li><li><p><strong><code>address</code></strong>: Dirección principal (tipo complejo).</p></li><li><p><strong><code>organization</code></strong>: Departamento o unidad organizativa principal.</p></li><li><p><strong><code>organizationalUnit</code></strong>: Sub-unidades organizativas.</p></li><li><p><strong><code>jobTitle</code></strong>: Cargo oficial.</p></li><li><p><strong><code>employeeNumber</code> / <code>studentNumber</code></strong>: Código institucional de empleado o estudiante.</p></li><li><p><strong><code>jpegPhoto</code></strong>: Foto de perfil.</p></li></ul><h3>5.2. Atributos de Extensión (<code>upeuPerson</code>)</h3><h4>Capa: <code>identity</code> (Identificadores)</h4><ul><li><p><code>taxId</code>: Para el DNI, RUC u otro ID fiscal.</p></li><li><p><code>alternateName</code>: Nombres alternativos, alias, nombre de casada/o (multivalor).</p></li><li><p><code>universityIdCard</code>: Carnet Universitario oficial (regulado por SUNEDU).</p></li><li><p><code>institutionalIdCard</code>: Tarjeta de Identificación interna de la UPeU.</p></li><li><p><code>hasCredential</code>: Credenciales educativas o profesionales (certificaciones, licencias) (multivalor).</p></li><li><p><code>sameAs</code>: URL a perfiles de referencia (Wikipedia, Wikidata) (multivalor).</p></li></ul><h4>Capa: <code>personDetails</code> (Detalles Personales)</h4><ul><li><p><code>birthDate</code>: Fecha de nacimiento.</p></li><li><p><code>birthPlace</code>: Lugar de nacimiento.</p></li><li><p><code>deathDate</code>: Fecha de fallecimiento.</p></li><li><p><code>gender</code>: Género.</p></li><li><p><code>nationality</code>: Nacionalidad.</p></li><li><p><code>pronouns</code>: Pronombres personales.</p></li><li><p><code>url</code>: Páginas web personales (blog, LinkedIn, etc.) (multivalor).</p></li><li><p><code>biography</code>: Resumen biográfico.</p></li><li><p><code>knowsLanguage</code>: Idiomas conocidos (multivalor).</p></li></ul><h4>Capa: <code>employment</code> (Información Laboral)</h4><ul><li><p><code>affiliation</code>: Afiliación principal (Facultad, etc.).</p></li><li><p><code>alumniOf</code>: Instituciones de las que es egresado (multivalor).</p></li><li><p><code>hasOccupation</code>: Ocupación o profesión (ej. "Bibliotecólogo").</p></li><li><p><code>worksFor</code>: Otras organizaciones para las que trabaja (multivalor).</p></li><li><p><code>contractStartDate</code>: Fecha de inicio de contrato.</p></li><li><p><code>contractEndDate</code>: Fecha de fin de contrato.</p></li></ul><h4>Capa: <code>academic</code> (Perfil Académico)</h4><ul><li><p><code>orcid</code>: Identificador ORCID.</p></li><li><p><code>scopusId</code>: Identificador Scopus.</p></li><li><p><code>researcherId</code>: ID de Researcher (WoS/Publons).</p></li><li><p><code>googleScholarId</code>: ID de perfil de Google Scholar.</p></li><li><p><code>award</code>: Premios y reconocimientos (multivalor).</p></li><li><p><code>interests</code>: Áreas de interés de investigación (multivalor).</p></li><li><p><code>skills</code>: Habilidades o competencias (multivalor).</p></li></ul><h4>Capa: <code>peruStandards</code> (Estándares Nacionales)</h4><ul><li><p><code>renacytCode</code>: Código del investigador en RENACYT (CONCYTEC).</p></li><li><p><code>ctiVitaeId</code>: ID del CTI Vitae / DINA (CONCYTEC).</p></li></ul><h4>Capa: <code>koha</code> (Específicos de Koha)</h4><ul><li><p><code>branchCode</code>: Código de la sede o biblioteca.</p></li><li><p><code>categoryId</code>: ID de la categoría de usuario.</p></li><li><p><code>staffNotes</code>: Notas internas del personal.</p></li><li><p><code>opacNotes</code>: Notas visibles en el OPAC.</p></li><li><p><code>smsNumber</code>: Número para notificaciones SMS.</p></li><li><p><code>dateEnrolled</code>: Fecha de inscripción en la biblioteca.</p></li><li><p><code>dateRenewed</code>: Fecha de última renovación.</p></li></ul><h4>Capa: <code>ojs</code> (Específicos de OJS)</h4><ul><li><p><code>userRole</code>: Roles como "Author", "Reviewer" (multivalor).</p></li><li><p><code>gossip</code>: Notas privadas.</p></li><li><p><code>signature</code>: Firma de correo.</p></li><li><p><code>preferredPublicName</code>: Nombre público preferido.</p></li></ul><h4>Capa: <code>dspaceCris</code> (Específicos de DSpace CRIS)</h4><ul><li><p><code>crisInternalId</code>: ID interno del perfil en CRIS.</p></li><li><p><code>epersonId</code>: ID del EPerson en DSpace.</p></li></ul><h4>Capa: <code>indico</code> (Específicos de Indico)</h4><ul><li><p><code>indicoUserId</code>: ID numérico del usuario.</p></li><li><p><code>avatarUrl</code>: URL de la foto de perfil.</p></li></ul><h2>6. Guía de Mapeo de Atributos</h2><p>Las siguientes tablas sirven como referencia para configurar el mapeo de atributos (<code>schemaHandling</code>) en los recursos de Midpoint para cada plataforma.</p><h3>6.1. Mapeo para Koha</h3><table><tbody><tr><th><p>Atributo en Midpoint (Modelo Central)</p></th><th><p>Atributo en Koha (API)</p></th><th><p>Notas / Lógica de Mapeo</p></th></tr><tr><td><p><code>name</code> (Nativo)</p></td><td><p><code>userid</code></p></td><td><p>Mapeo directo del nombre de usuario de Midpoint.</p></td></tr><tr><td><p><code>givenName</code> (Nativo)</p></td><td><p><code>firstname</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>familyName</code> (Nativo)</p></td><td><p><code>surname</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>additionalName</code> (Nativo)</p></td><td><p><code>middle_name</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>honorificPrefix</code> (Nativo)</p></td><td><p><code>title</code></p></td><td><p>Títulos como Dr., Ing., etc.</p></td></tr><tr><td><p><code>emailAddress</code> (Nativo)</p></td><td><p><code>email</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>telephoneNumber</code> (Nativo)</p></td><td><p><code>phone</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>mobile</code> (Nativo)</p></td><td><p><code>mobile</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>fax</code> (Nativo)</p></td><td><p><code>fax</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>extension/identity/institutionalIdCard</code></p></td><td><p><code>cardnumber</code></p></td><td><p>El ID Card institucional es la tarjeta de la biblioteca.</p></td></tr><tr><td><p><code>extension/koha/branchCode</code></p></td><td><p><code>library_id</code></p></td><td><p>Específico de Koha: define la sede de la biblioteca.</p></td></tr><tr><td><p><code>extension/koha/categoryId</code></p></td><td><p><code>category_id</code></p></td><td><p>Específico de Koha: define el tipo de usuario (DOCEN, EST).</p></td></tr><tr><td><p><code>extension/personDetails/birthDate</code></p></td><td><p><code>date_of_birth</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>extension/employment/contractEndDate</code></p></td><td><p><code>expiry_date</code></p></td><td><p>La fecha de fin de contrato puede usarse para la expiración de la cuenta en Koha.</p></td></tr><tr><td><p><code>extension/koha/staffNotes</code></p></td><td><p><code>staff_notes</code></p></td><td><p>Específico de Koha.</p></td></tr><tr><td><p><code>extension/koha/opacNotes</code></p></td><td><p><code>opac_notes</code></p></td><td><p>Específico de Koha.</p></td></tr><tr><td><p><code>extension/personDetails/gender</code></p></td><td><p><code>gender</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>extension/personDetails/pronouns</code></p></td><td><p><code>pronouns</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>address</code> (Nativo, tipo complejo)</p></td><td><p><code>address</code>, <code>city</code>, etc.</p></td><td><p>Mapear los sub-campos (<code>street</code>, <code>locality</code>, <code>postalCode</code>, <code>country</code>) de Midpoint a los campos de Koha.</p></td></tr><tr><td><p><code>activation/administrativeStatus</code> == <code>DISABLED</code></p></td><td><p><code>restricted</code></p></td><td><p>Lógica de mapeo: si el usuario está deshabilitado en Midpoint, se marca como restringido en Koha.</p></td></tr></tbody></table><h3>6.2. Mapeo para OJS</h3><table><tbody><tr><th><p>Atributo en Midpoint (Modelo Central)</p></th><th><p>Atributo en OJS (API)</p></th><th><p>Notas / Lógica de Mapeo</p></th></tr><tr><td><p><code>name</code> (Nativo)</p></td><td><p><code>userName</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>givenName</code> (Nativo)</p></td><td><p><code>givenName</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>familyName</code> (Nativo)</p></td><td><p><code>familyName</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>fullName</code> (Nativo)</p></td><td><p><code>fullName</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>emailAddress</code> (Nativo)</p></td><td><p><code>email</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>extension/employment/affiliation</code></p></td><td><p><code>affiliation</code></p></td><td><p>La afiliación principal de Midpoint se usa como la afiliación en OJS.</p></td></tr><tr><td><p><code>extension/personDetails/biography</code></p></td><td><p><code>biography</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>extension/academic/orcid</code></p></td><td><p><code>orcid</code></p></td><td><p>Mapeo directo del identificador estándar.</p></td></tr><tr><td><p><code>extension/academic/interests</code></p></td><td><p><code>interests</code> (array)</p></td><td><p>Atributo multivalor para las áreas de interés.</p></td></tr><tr><td><p><code>extension/ojs/userRole</code></p></td><td><p><code>groups</code> (array)</p></td><td><p>Los roles asignados en Midpoint se mapean a los grupos a los que pertenece el usuario en OJS.</p></td></tr><tr><td><p><code>activation/administrativeStatus</code> == <code>DISABLED</code></p></td><td><p><code>disabled</code></p></td><td><p>Mapeo directo del estado de la cuenta.</p></td></tr><tr><td><p><code>extension/ojs/gossip</code></p></td><td><p><code>gossip</code></p></td><td><p>Notas privadas específicas de OJS.</p></td></tr><tr><td><p><code>extension/ojs/signature</code></p></td><td><p><code>signature</code></p></td><td><p>Firma de correo específica de OJS.</p></td></tr><tr><td><p><code>extension/personDetails/url</code></p></td><td><p><code>url</code></p></td><td><p>URL del perfil personal.</p></td></tr><tr><td><p><code>locale</code> (Nativo)</p></td><td><p><code>locales</code></p></td><td><p>El idioma de preferencia del usuario.</p></td></tr></tbody></table><h3>6.3. Mapeo para Indico</h3><table><tbody><tr><th><p>Atributo en Midpoint (Modelo Central)</p></th><th><p>Atributo en Indico (API)</p></th><th><p>Notas / Lógica de Mapeo</p></th></tr><tr><td><p><code>givenName</code> (Nativo)</p></td><td><p><code>first_name</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>familyName</code> (Nativo)</p></td><td><p><code>last_name</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>fullName</code> (Nativo)</p></td><td><p><code>full_name</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>emailAddress</code> (Nativo)</p></td><td><p><code>email</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>extension/employment/affiliation</code></p></td><td><p><code>affiliation</code></p></td><td><p>La afiliación principal se usa como la afiliación en Indico.</p></td></tr><tr><td><p><code>telephoneNumber</code> (Nativo)</p></td><td><p><code>phone</code></p></td><td><p>Mapeo directo.</p></td></tr><tr><td><p><code>jpegPhoto</code> (Nativo)</p></td><td><p><code>avatar_url</code></p></td><td><p>Se podría requerir una lógica para exponer la URL de la foto.</p></td></tr><tr><td><p><code>extension/indico/indicoUserId</code></p></td><td><p><code>id</code> / <code>identifier</code></p></td><td><p>Atributo específico para almacenar el ID del usuario en Indico.</p></td></tr></tbody></table><h3>6.4. Mapeo para DSpace / DSpace CRIS</h3><table><tbody><tr><th><p>Atributo en Midpoint (Modelo Central)</p></th><th><p>Atributo en DSpace/CRIS (Metadatos)</p></th><th><p>Notas / Lógica de Mapeo</p></th></tr><tr><td><p><code>fullName</code> (Nativo)</p></td><td><p><code>dc.title</code></p></td><td><p>El nombre completo se usa como el título del ítem de Investigador (CRIS).</p></td></tr><tr><td><p><code>familyName</code> (Nativo) + <code>, </code> + <code>givenName</code> (Nativo)</p></td><td><p><code>dc.contributor.author</code></p></td><td><p>El nombre en formato "Apellido, Nombre" es el estándar para la autoría.</p></td></tr><tr><td><p><code>emailAddress</code> (Nativo)</p></td><td><p><code>eperson.email</code></p></td><td><p>Mapeo directo al email del EPerson.</p></td></tr><tr><td><p><code>extension/personDetails/biography</code></p></td><td><p><code>dc.description.abstract</code></p></td><td><p>La biografía se puede mapear al resumen del perfil del investigador.</p></td></tr><tr><td><p><code>extension/academic/orcid</code></p></td><td><p><code>person.identifier.orcid</code></p></td><td><p>Mapeo al campo específico de ORCID en DSpace-CRIS.</p></td></tr><tr><td><p><code>extension/academic/scopusId</code></p></td><td><p><code>person.identifier.scopus</code></p></td><td><p>Mapeo al campo específico de Scopus ID.</p></td></tr><tr><td><p><code>extension/peruStandards/renacytCode</code></p></td><td><p><code>person.identifier.renacyt</code></p></td><td><p>Campo para el código RENACYT.</p></td></tr><tr><td><p><code>extension/peruStandards/ctiVitaeId</code></p></td><td><p><code>person.identifier.dina</code></p></td><td><p>Campo para el ID de CTI Vitae (DINA).</p></td></tr><tr><td><p><code>extension/employment/affiliation</code></p></td><td><p><code>person.affiliation</code></p></td><td><p>La afiliación principal se mapea al campo de afiliación del investigador.</p></td></tr><tr><td><p><code>extension/dspaceCris/crisInternalId</code></p></td><td><p><code>cris.id</code></p></td><td><p>Atributo específico para almacenar el ID interno del objeto CRIS.</p></td></tr><tr><td><p><code>extension/dspaceCris/epersonId</code></p></td><td><p><code>eperson.id</code></p></td><td><p>Atributo específico para almacenar el ID del objeto EPerson.</p></td></tr></tbody></table></div>
+# Esquema de Extensión de Midpoint para la UPeU (Versión 3.0)
+
+## 1. Visión General
+
+Este documento describe la arquitectura y el contenido del **Esquema de Extensión para Personas UPeU**, un modelo de datos maestro diseñado para actuar como la **fuente única de la verdad (Single Source of Truth)** para la identidad digital de todos los individuos en el ecosistema de la Universidad Peruana Unión.
+
+La arquitectura de este esquema es **holística, estandarizada y escalable**, permitiendo la integración de diversas plataformas como Koha, DSpace CRIS, OJS, Indico, sistemas de RRHH, portales académicos y financieros.
+
+## 2. Principios de Arquitectura y Diseño
+
+El esquema se construye siguiendo una filosofía de prioridades claras para garantizar la estandarización y evitar la redundancia:
+
+1.  **Nativo de Midpoint Primero:** Se reutilizan al máximo los atributos estándar que Midpoint ofrece para `UserType`.
+2.  **Estándares Globales (schema.org):** Para conceptos comunes que no son nativos en Midpoint, se adoptan las definiciones del vocabulario de `schema.org/Person`.
+3.  **Estándares Nacionales:** Se incorporan atributos específicos de los estándares peruanos de investigación y académicos (ej. CONCYTEC).
+4.  **Atributos Específicos de Aplicación:** Únicamente los atributos que solo tienen sentido dentro de una plataforma concreta se aíslan en su propia sección para mantener el modelo limpio.
+
+## 3. Arquitectura de Capas (Definitions)
+
+El esquema está organizado en capas lógicas utilizando `Definitions` de Midpoint. Esto permite una clara separación de intereses y facilita la gestión y escalabilidad.
+
+-   **`identity`**: Contiene los identificadores únicos y oficiales de una persona.
+-   **`personDetails`**: Almacena atributos demográficos y personales genéricos.
+-   **`employment`**: Guarda información sobre la relación laboral, contractual y de afiliación.
+-   **`academic`**: Centraliza el perfil de investigador y académico.
+-   **`peruStandards`**: Aloja identificadores de los estándares nacionales de Perú.
+-   **`[nombre_sistema]`**: Definiciones específicas para cada plataforma integrada (ej. `koha`, `ojs`, `indico`, `dspaceCris`).
+
+## 4. Arquitectura del Conector Java
+
+El código fuente del conector ha sido refactorizado siguiendo una arquitectura modular y principios de diseño SOLID para mejorar la mantenibilidad, legibilidad y testeabilidad. La estructura se organiza de la siguiente manera:
+
+-   **`RestUsersConnector.java` (Orquestador):** Es la clase principal y punto de entrada que implementa las interfaces de ConnId. Su única responsabilidad es orquestar las operaciones, delegando el trabajo pesado a componentes especializados.
+-   **Paquete `model`:**
+    -   `AttributeMetadata.java`: Una clase POJO que define la estructura para los metadatos de los atributos, desacoplando la definición del atributo de su lógica de mapeo.
+-   **Clase `KohaAuthenticator.java`:** Centraliza toda la lógica de autenticación (Basic y OAuth2). Crea un cliente HTTP pre-configurado que añade automáticamente las cabeceras de `Authorization` a cada petición, desacoplando los servicios de los detalles de autenticación.
+-   **Paquete `services`:**
+    -   `PatronService.java` y `CategoryService.java`: Contienen la lógica de negocio para cada tipo de objeto. Son responsables de construir las peticiones HTTP, interactuar con los endpoints específicos de la API de Koha y manejar las respuestas. No tienen conocimiento de la autenticación.
+-   **Paquete `mappers`:**
+    -   `BaseMapper.java`, `PatronMapper.java`, `CategoryMapper.java`: Son los especialistas en la transformación de datos. Convierten los objetos `ConnectorObject` de Midpoint a formato JSON para enviar a la API, y viceversa. Contienen el "diccionario" de atributos y sus mapeos.
+
+Esta separación de responsabilidades hace que el conector sea robusto y fácil de extender para futuras integraciones.
+
+## 5. Diccionario de Atributos del Esquema (`upeuPerson`)
+
+Esta sección detalla todos los atributos utilizados en el modelo de identidad de la UPeU.
+
+### 5.1. Atributos Nativos de Midpoint (Usados Directamente)
+
+-   **`givenName`**: Nombres.
+-   **`familyName`**: Apellidos.
+-   **`additionalName`**: Segundo nombre.
+-   **`honorificPrefix`**: Prefijo honorífico (Dr., Ing.).
+-   **`honorificSuffix`**: Sufijo honorífico (PhD, M.Sc.).
+-   **`emailAddress`**: Email principal.
+-   **`telephoneNumber`**: Teléfono principal.
+-   **`mobile`**: Teléfono móvil.
+-   **`fax`**: Número de fax.
+-   **`address`**: Dirección principal (tipo complejo).
+-   **`organization`**: Departamento o unidad organizativa principal.
+-   **`organizationalUnit`**: Sub-unidades organizativas.
+-   **`jobTitle`**: Cargo oficial.
+-   **`employeeNumber` / `studentNumber`**: Código institucional de empleado o estudiante.
+-   **`jpegPhoto`**: Foto de perfil.
+
+### 5.2. Atributos de Extensión (`upeuPerson`)
+
+#### Capa: `identity` (Identificadores)
+
+-   `taxId`: Para el DNI, RUC u otro ID fiscal.
+-   `alternateName`: Nombres alternativos, alias, nombre de casada/o (multivalor).
+-   `universityIdCard`: Carnet Universitario oficial (regulado por SUNEDU).
+-   `institutionalIdCard`: Tarjeta de Identificación interna de la UPeU.
+-   `hasCredential`: Credenciales educativas o profesionales (certificaciones, licencias) (multivalor).
+-   `sameAs`: URL a perfiles de referencia (Wikipedia, Wikidata) (multivalor).
+
+#### Capa: `personDetails` (Detalles Personales)
+
+-   `birthDate`: Fecha de nacimiento.
+-   `birthPlace`: Lugar de nacimiento.
+-   `deathDate`: Fecha de fallecimiento.
+-   `gender`: Género.
+-   `nationality`: Nacionalidad.
+-   `pronouns`: Pronombres personales.
+-   `url`: Páginas web personales (blog, LinkedIn, etc.) (multivalor).
+-   `biography`: Resumen biográfico.
+-   `knowsLanguage`: Idiomas conocidos (multivalor).
+
+#### Capa: `employment` (Información Laboral)
+
+-   `affiliation`: Afiliación principal (Facultad, etc.).
+-   `alumniOf`: Instituciones de las que es egresado (multivalor).
+-   `hasOccupation`: Ocupación o profesión (ej. "Bibliotecólogo").
+-   `worksFor`: Otras organizaciones para las que trabaja (multivalor).
+-   `contractStartDate`: Fecha de inicio de contrato.
+-   `contractEndDate`: Fecha de fin de contrato.
+
+#### Capa: `academic` (Perfil Académico)
+
+-   `orcid`: Identificador ORCID.
+-   `scopusId`: Identificador Scopus.
+-   `researcherId`: ID de Researcher (WoS/Publons).
+-   `googleScholarId`: ID de perfil de Google Scholar.
+-   `award`: Premios y reconocimientos (multivalor).
+-   `interests`: Áreas de interés de investigación (multivalor).
+-   `skills`: Habilidades o competencias (multivalor).
+
+#### Capa: `peruStandards` (Estándares Nacionales)
+
+-   `renacytCode`: Código del investigador en RENACYT (CONCYTEC).
+-   `ctiVitaeId`: ID del CTI Vitae / DINA (CONCYTEC).
+
+#### Capa: `koha` (Específicos de Koha)
+
+-   `branchCode`: Código de la sede o biblioteca.
+-   `categoryId`: ID de la categoría de usuario.
+-   `staffNotes`: Notas internas del personal.
+-   `opacNotes`: Notas visibles en el OPAC.
+-   `smsNumber`: Número para notificaciones SMS.
+-   `dateEnrolled`: Fecha de inscripción en la biblioteca.
+-   `dateRenewed`: Fecha de última renovación.
+
+#### Capa: `ojs` (Específicos de OJS)
+
+-   `userRole`: Roles como "Author", "Reviewer" (multivalor).
+-   `gossip`: Notas privadas.
+-   `signature`: Firma de correo.
+-   `preferredPublicName`: Nombre público preferido.
+
+#### Capa: `dspaceCris` (Específicos de DSpace CRIS)
+
+-   `crisInternalId`: ID interno del perfil en CRIS.
+-   `epersonId`: ID del EPerson en DSpace.
+
+#### Capa: `indico` (Específicos de Indico)
+
+-   `indicoUserId`: ID numérico del usuario.
+-   `avatarUrl`: URL de la foto de perfil.
+
+## 6. Guía de Mapeo de Atributos
+
+Las siguientes tablas sirven como referencia para configurar el mapeo de atributos (`schemaHandling`) en los recursos de Midpoint para cada plataforma.
+
+### 6.1. Mapeo para Koha
+
+| Atributo en Midpoint (Modelo Central)                    | Atributo en Koha (API) | Notas / Lógica de Mapeo                                                                                              |
+| -------------------------------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `name` (Nativo)                                          | `userid`               | Mapeo directo del nombre de usuario de Midpoint.                                                                     |
+| `givenName` (Nativo)                                     | `firstname`            | Mapeo directo.                                                                                                       |
+| `familyName` (Nativo)                                    | `surname`              | Mapeo directo.                                                                                                       |
+| `additionalName` (Nativo)                                | `middle_name`          | Mapeo directo.                                                                                                       |
+| `honorificPrefix` (Nativo)                               | `title`                | Títulos como Dr., Ing., etc.                                                                                         |
+| `emailAddress` (Nativo)                                  | `email`                | Mapeo directo.                                                                                                       |
+| `telephoneNumber` (Nativo)                               | `phone`                | Mapeo directo.                                                                                                       |
+| `mobile` (Nativo)                                        | `mobile`               | Mapeo directo.                                                                                                       |
+| `fax` (Nativo)                                           | `fax`                  | Mapeo directo.                                                                                                       |
+| `extension/identity/institutionalIdCard`                 | `cardnumber`           | El ID Card institucional es la tarjeta de la biblioteca.                                                             |
+| `extension/koha/branchCode`                              | `library_id`           | Específico de Koha: define la sede de la biblioteca.                                                                 |
+| `extension/koha/categoryId`                              | `category_id`          | Específico de Koha: define el tipo de usuario (DOCEN, EST).                                                          |
+| `extension/personDetails/birthDate`                      | `date_of_birth`        | Mapeo directo.                                                                                                       |
+| `extension/employment/contractEndDate`                   | `expiry_date`          | La fecha de fin de contrato puede usarse para la expiración de la cuenta en Koha.                                    |
+| `extension/koha/staffNotes`                              | `staff_notes`          | Específico de Koha.                                                                                                  |
+| `extension/koha/opacNotes`                               | `opac_notes`           | Específico de Koha.                                                                                                  |
+| `extension/personDetails/gender`                         | `gender`               | Mapeo directo.                                                                                                       |
+| `extension/personDetails/pronouns`                       | `pronouns`             | Mapeo directo.                                                                                                       |
+| `address` (Nativo, tipo complejo)                        | `address`, `city`, etc. | Mapear los sub-campos (`street`, `locality`, `postalCode`, `country`) de Midpoint a los campos de Koha. |
+| `activation/administrativeStatus` == `DISABLED`          | `restricted`           | Lógica de mapeo: si el usuario está deshabilitado en Midpoint, se marca como restringido en Koha.                 |
+
+### 6.2. Mapeo para OJS
+
+| Atributo en Midpoint (Modelo Central)              | Atributo en OJS (API)     | Notas / Lógica de Mapeo                                                                         |
+| -------------------------------------------------- | ------------------------- | ----------------------------------------------------------------------------------------------- |
+| `name` (Nativo)                                    | `userName`                | Mapeo directo.                                                                                  |
+| `givenName` (Nativo)                               | `givenName`               | Mapeo directo.                                                                                  |
+| `familyName` (Nativo)                              | `familyName`              | Mapeo directo.                                                                                  |
+| `fullName` (Nativo)                                | `fullName`                | Mapeo directo.                                                                                  |
+| `emailAddress` (Nativo)                            | `email`                   | Mapeo directo.                                                                                  |
+| `extension/employment/affiliation`                 | `affiliation`             | La afiliación principal de Midpoint se usa como la afiliación en OJS.                           |
+| `extension/personDetails/biography`                | `biography`               | Mapeo directo.                                                                                  |
+| `extension/academic/orcid`                         | `orcid`                   | Mapeo directo del identificador estándar.                                                       |
+| `extension/academic/interests`                     | `interests` (array)       | Atributo multivalor para las áreas de interés.                                                  |
+| `extension/ojs/userRole`                           | `groups` (array)          | Los roles asignados en Midpoint se mapean a los grupos a los que pertenece el usuario en OJS.   |
+| `activation/administrativeStatus` == `DISABLED`    | `disabled`                | Mapeo directo del estado de la cuenta.                                                         |
+| `extension/ojs/gossip`                             | `gossip`                  | Notas privadas específicas de OJS.                                                              |
+| `extension/ojs/signature`                          | `signature`               | Firma de correo específica de OJS.                                                              |
+| `extension/personDetails/url`                      | `url`                     | URL del perfil personal.                                                                        |
+| `locale` (Nativo)                                  | `locales`                 | El idioma de preferencia del usuario.                                                           |
+
+### 6.3. Mapeo para Indico
+
+| Atributo en Midpoint (Modelo Central)    | Atributo en Indico (API) | Notas / Lógica de Mapeo                                      |
+| ---------------------------------------- | ------------------------ | ------------------------------------------------------------ |
+| `givenName` (Nativo)                     | `first_name`             | Mapeo directo.                                               |
+| `familyName` (Nativo)                    | `last_name`              | Mapeo directo.                                               |
+| `fullName` (Nativo)                      | `full_name`              | Mapeo directo.                                               |
+| `emailAddress` (Nativo)                  | `email`                  | Mapeo directo.                                               |
+| `extension/employment/affiliation`       | `affiliation`            | La afiliación principal se usa como la afiliación en Indico. |
+| `telephoneNumber` (Nativo)               | `phone`                  | Mapeo directo.                                               |
+| `jpegPhoto` (Nativo)                     | `avatar_url`             | Se podría requerir una lógica para exponer la URL de la foto. |
+| `extension/indico/indicoUserId`          | `id` / `identifier`      | Atributo específico para almacenar el ID del usuario en Indico. |
+
+### 6.4. Mapeo para DSpace / DSpace CRIS
+
+| Atributo en Midpoint (Modelo Central)                     | Atributo en DSpace/CRIS (Metadatos) | Notas / Lógica de Mapeo                                                                         |
+| --------------------------------------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------- |
+| `fullName` (Nativo)                                       | `dc.title`                          | El nombre completo se usa como el título del ítem de Investigador (CRIS).                         |
+| `familyName` (Nativo) + `, ` + `givenName` (Nativo)       | `dc.contributor.author`             | El nombre en formato "Apellido, Nombre" es el estándar para la autoría.                         |
+| `emailAddress` (Nativo)                                   | `eperson.email`                     | Mapeo directo al email del EPerson.                                                             |
+| `extension/personDetails/biography`                       | `dc.description.abstract`           | La biografía se puede mapear al resumen del perfil del investigador.                            |
+| `extension/academic/orcid`                                | `person.identifier.orcid`           | Mapeo al campo específico de ORCID en DSpace-CRIS.                                              |
+| `extension/academic/scopusId`                             | `person.identifier.scopus`          | Mapeo al campo específico de Scopus ID.                                                         |
+| `extension/peruStandards/renacytCode`                     | `person.identifier.renacyt`         | Campo para el código RENACYT.                                                                   |
+| `extension/peruStandards/ctiVitaeId`                      | `person.identifier.dina`            | Campo para el ID de CTI Vitae (DINA).                                                           |
+| `extension/employment/affiliation`                        | `person.affiliation`                | La afiliación principal se mapea al campo de afiliación del investigador.                       |
+| `extension/dspaceCris/crisInternalId`                     | `cris.id`                           | Atributo específico para almacenar el ID interno del objeto CRIS.                               |
+| `extension/dspaceCris/epersonId`                          | `eperson.id`                        | Atributo específico para almacenar el ID del objeto EPerson.                                    |
