@@ -1,216 +1,539 @@
-# Esquema de Extensión de Midpoint para la UPeU (Versión 3.0)
-
-## 1. Visión General
-
-Este documento describe la arquitectura y el contenido del **Esquema de Extensión para Personas UPeU**, un modelo de datos maestro diseñado para actuar como la **fuente única de la verdad (Single Source of Truth)** para la identidad digital de todos los individuos en el ecosistema de la Universidad Peruana Unión.
-
-La arquitectura de este esquema es **holística, estandarizada y escalable**, permitiendo la integración de diversas plataformas como Koha, DSpace CRIS, OJS, Indico, sistemas de RRHH, portales académicos y financieros.
-
-## 2. Principios de Arquitectura y Diseño
-
-El esquema se construye siguiendo una filosofía de prioridades claras para garantizar la estandarización y evitar la redundancia:
-
-1.  **Nativo de Midpoint Primero:** Se reutilizan al máximo los atributos estándar que Midpoint ofrece para `UserType`.
-2.  **Estándares Globales (schema.org):** Para conceptos comunes que no son nativos en Midpoint, se adoptan las definiciones del vocabulario de `schema.org/Person`.
-3.  **Estándares Nacionales:** Se incorporan atributos específicos de los estándares peruanos de investigación y académicos (ej. CONCYTEC).
-4.  **Atributos Específicos de Aplicación:** Únicamente los atributos que solo tienen sentido dentro de una plataforma concreta se aíslan en su propia sección para mantener el modelo limpio.
-
-## 3. Arquitectura de Capas (Definitions)
-
-El esquema está organizado en capas lógicas utilizando `Definitions` de Midpoint. Esto permite una clara separación de intereses y facilita la gestión y escalabilidad.
-
--   **`identity`**: Contiene los identificadores únicos y oficiales de una persona.
--   **`personDetails`**: Almacena atributos demográficos y personales genéricos.
--   **`employment`**: Guarda información sobre la relación laboral, contractual y de afiliación.
--   **`academic`**: Centraliza el perfil de investigador y académico.
--   **`peruStandards`**: Aloja identificadores de los estándares nacionales de Perú.
--   **`[nombre_sistema]`**: Definiciones específicas para cada plataforma integrada (ej. `koha`, `ojs`, `indico`, `dspaceCris`).
-
-## 4. Arquitectura del Conector Java
-
-El código fuente del conector ha sido refactorizado siguiendo una arquitectura modular y principios de diseño SOLID para mejorar la mantenibilidad, legibilidad y testeabilidad. La estructura se organiza de la siguiente manera:
-
--   **`RestUsersConnector.java` (Orquestador):** Es la clase principal y punto de entrada que implementa las interfaces de ConnId. Su única responsabilidad es orquestar las operaciones, delegando el trabajo pesado a componentes especializados.
--   **Paquete `model`:**
-    -   `AttributeMetadata.java`: Una clase POJO que define la estructura para los metadatos de los atributos, desacoplando la definición del atributo de su lógica de mapeo.
--   **Clase `KohaAuthenticator.java`:** Centraliza toda la lógica de autenticación (Basic y OAuth2). Crea un cliente HTTP pre-configurado que añade automáticamente las cabeceras de `Authorization` a cada petición, desacoplando los servicios de los detalles de autenticación.
--   **Paquete `services`:**
-    -   `PatronService.java` y `CategoryService.java`: Contienen la lógica de negocio para cada tipo de objeto. Son responsables de construir las peticiones HTTP, interactuar con los endpoints específicos de la API de Koha y manejar las respuestas. No tienen conocimiento de la autenticación.
--   **Paquete `mappers`:**
-    -   `BaseMapper.java`, `PatronMapper.java`, `CategoryMapper.java`: Son los especialistas en la transformación de datos. Convierten los objetos `ConnectorObject` de Midpoint a formato JSON para enviar a la API, y viceversa. Contienen el "diccionario" de atributos y sus mapeos.
-
-Esta separación de responsabilidades hace que el conector sea robusto y fácil de extender para futuras integraciones.
-
-## 5. Diccionario de Atributos del Esquema (`upeuPerson`)
-
-Esta sección detalla todos los atributos utilizados en el modelo de identidad de la UPeU.
-
-### 5.1. Atributos Nativos de Midpoint (Usados Directamente)
-
--   **`givenName`**: Nombres.
--   **`familyName`**: Apellidos.
--   **`additionalName`**: Segundo nombre.
--   **`honorificPrefix`**: Prefijo honorífico (Dr., Ing.).
--   **`honorificSuffix`**: Sufijo honorífico (PhD, M.Sc.).
--   **`emailAddress`**: Email principal.
--   **`telephoneNumber`**: Teléfono principal.
--   **`mobile`**: Teléfono móvil.
--   **`fax`**: Número de fax.
--   **`address`**: Dirección principal (tipo complejo).
--   **`organization`**: Departamento o unidad organizativa principal.
--   **`organizationalUnit`**: Sub-unidades organizativas.
--   **`jobTitle`**: Cargo oficial.
--   **`employeeNumber` / `studentNumber`**: Código institucional de empleado o estudiante.
--   **`jpegPhoto`**: Foto de perfil.
-
-### 5.2. Atributos de Extensión (`upeuPerson`)
-
-#### Capa: `identity` (Identificadores)
-
--   `taxId`: Para el DNI, RUC u otro ID fiscal.
--   `alternateName`: Nombres alternativos, alias, nombre de casada/o (multivalor).
--   `universityIdCard`: Carnet Universitario oficial (regulado por SUNEDU).
--   `institutionalIdCard`: Tarjeta de Identificación interna de la UPeU.
--   `hasCredential`: Credenciales educativas o profesionales (certificaciones, licencias) (multivalor).
--   `sameAs`: URL a perfiles de referencia (Wikipedia, Wikidata) (multivalor).
-
-#### Capa: `personDetails` (Detalles Personales)
-
--   `birthDate`: Fecha de nacimiento.
--   `birthPlace`: Lugar de nacimiento.
--   `deathDate`: Fecha de fallecimiento.
--   `gender`: Género.
--   `nationality`: Nacionalidad.
--   `pronouns`: Pronombres personales.
--   `url`: Páginas web personales (blog, LinkedIn, etc.) (multivalor).
--   `biography`: Resumen biográfico.
--   `knowsLanguage`: Idiomas conocidos (multivalor).
-
-#### Capa: `employment` (Información Laboral)
-
--   `affiliation`: Afiliación principal (Facultad, etc.).
--   `alumniOf`: Instituciones de las que es egresado (multivalor).
--   `hasOccupation`: Ocupación o profesión (ej. "Bibliotecólogo").
--   `worksFor`: Otras organizaciones para las que trabaja (multivalor).
--   `contractStartDate`: Fecha de inicio de contrato.
--   `contractEndDate`: Fecha de fin de contrato.
-
-#### Capa: `academic` (Perfil Académico)
-
--   `orcid`: Identificador ORCID.
--   `scopusId`: Identificador Scopus.
--   `researcherId`: ID de Researcher (WoS/Publons).
--   `googleScholarId`: ID de perfil de Google Scholar.
--   `award`: Premios y reconocimientos (multivalor).
--   `interests`: Áreas de interés de investigación (multivalor).
--   `skills`: Habilidades o competencias (multivalor).
-
-#### Capa: `peruStandards` (Estándares Nacionales)
-
--   `renacytCode`: Código del investigador en RENACYT (CONCYTEC).
--   `ctiVitaeId`: ID del CTI Vitae / DINA (CONCYTEC).
-
-#### Capa: `koha` (Específicos de Koha)
-
--   `branchCode`: Código de la sede o biblioteca.
--   `categoryId`: ID de la categoría de usuario.
--   `staffNotes`: Notas internas del personal.
--   `opacNotes`: Notas visibles en el OPAC.
--   `smsNumber`: Número para notificaciones SMS.
--   `dateEnrolled`: Fecha de inscripción en la biblioteca.
--   `dateRenewed`: Fecha de última renovación.
-
-#### Capa: `ojs` (Específicos de OJS)
-
--   `userRole`: Roles como "Author", "Reviewer" (multivalor).
--   `gossip`: Notas privadas.
--   `signature`: Firma de correo.
--   `preferredPublicName`: Nombre público preferido.
-
-#### Capa: `dspaceCris` (Específicos de DSpace CRIS)
-
--   `crisInternalId`: ID interno del perfil en CRIS.
--   `epersonId`: ID del EPerson en DSpace.
-
-#### Capa: `indico` (Específicos de Indico)
-
--   `indicoUserId`: ID numérico del usuario.
--   `avatarUrl`: URL de la foto de perfil.
-
-## 6. Guía de Mapeo de Atributos
-
-Las siguientes tablas sirven como referencia para configurar el mapeo de atributos (`schemaHandling`) en los recursos de Midpoint para cada plataforma.
-
-### 6.1. Mapeo para Koha
-
-| Atributo en Midpoint (Modelo Central)                    | Atributo en Koha (API) | Notas / Lógica de Mapeo                                                                                              |
-| -------------------------------------------------------- | ---------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| `name` (Nativo)                                          | `userid`               | Mapeo directo del nombre de usuario de Midpoint.                                                                     |
-| `givenName` (Nativo)                                     | `firstname`            | Mapeo directo.                                                                                                       |
-| `familyName` (Nativo)                                    | `surname`              | Mapeo directo.                                                                                                       |
-| `additionalName` (Nativo)                                | `middle_name`          | Mapeo directo.                                                                                                       |
-| `honorificPrefix` (Nativo)                               | `title`                | Títulos como Dr., Ing., etc.                                                                                         |
-| `emailAddress` (Nativo)                                  | `email`                | Mapeo directo.                                                                                                       |
-| `telephoneNumber` (Nativo)                               | `phone`                | Mapeo directo.                                                                                                       |
-| `mobile` (Nativo)                                        | `mobile`               | Mapeo directo.                                                                                                       |
-| `fax` (Nativo)                                           | `fax`                  | Mapeo directo.                                                                                                       |
-| `extension/identity/institutionalIdCard`                 | `cardnumber`           | El ID Card institucional es la tarjeta de la biblioteca.                                                             |
-| `extension/koha/branchCode`                              | `library_id`           | Específico de Koha: define la sede de la biblioteca.                                                                 |
-| `extension/koha/categoryId`                              | `category_id`          | Específico de Koha: define el tipo de usuario (DOCEN, EST).                                                          |
-| `extension/personDetails/birthDate`                      | `date_of_birth`        | Mapeo directo.                                                                                                       |
-| `extension/employment/contractEndDate`                   | `expiry_date`          | La fecha de fin de contrato puede usarse para la expiración de la cuenta en Koha.                                    |
-| `extension/koha/staffNotes`                              | `staff_notes`          | Específico de Koha.                                                                                                  |
-| `extension/koha/opacNotes`                               | `opac_notes`           | Específico de Koha.                                                                                                  |
-| `extension/personDetails/gender`                         | `gender`               | Mapeo directo.                                                                                                       |
-| `extension/personDetails/pronouns`                       | `pronouns`             | Mapeo directo.                                                                                                       |
-| `address` (Nativo, tipo complejo)                        | `address`, `city`, etc. | Mapear los sub-campos (`street`, `locality`, `postalCode`, `country`) de Midpoint a los campos de Koha. |
-| `activation/administrativeStatus` == `DISABLED`          | `restricted`           | Lógica de mapeo: si el usuario está deshabilitado en Midpoint, se marca como restringido en Koha.                 |
-
-### 6.2. Mapeo para OJS
-
-| Atributo en Midpoint (Modelo Central)              | Atributo en OJS (API)     | Notas / Lógica de Mapeo                                                                         |
-| -------------------------------------------------- | ------------------------- | ----------------------------------------------------------------------------------------------- |
-| `name` (Nativo)                                    | `userName`                | Mapeo directo.                                                                                  |
-| `givenName` (Nativo)                               | `givenName`               | Mapeo directo.                                                                                  |
-| `familyName` (Nativo)                              | `familyName`              | Mapeo directo.                                                                                  |
-| `fullName` (Nativo)                                | `fullName`                | Mapeo directo.                                                                                  |
-| `emailAddress` (Nativo)                            | `email`                   | Mapeo directo.                                                                                  |
-| `extension/employment/affiliation`                 | `affiliation`             | La afiliación principal de Midpoint se usa como la afiliación en OJS.                           |
-| `extension/personDetails/biography`                | `biography`               | Mapeo directo.                                                                                  |
-| `extension/academic/orcid`                         | `orcid`                   | Mapeo directo del identificador estándar.                                                       |
-| `extension/academic/interests`                     | `interests` (array)       | Atributo multivalor para las áreas de interés.                                                  |
-| `extension/ojs/userRole`                           | `groups` (array)          | Los roles asignados en Midpoint se mapean a los grupos a los que pertenece el usuario en OJS.   |
-| `activation/administrativeStatus` == `DISABLED`    | `disabled`                | Mapeo directo del estado de la cuenta.                                                         |
-| `extension/ojs/gossip`                             | `gossip`                  | Notas privadas específicas de OJS.                                                              |
-| `extension/ojs/signature`                          | `signature`               | Firma de correo específica de OJS.                                                              |
-| `extension/personDetails/url`                      | `url`                     | URL del perfil personal.                                                                        |
-| `locale` (Nativo)                                  | `locales`                 | El idioma de preferencia del usuario.                                                           |
-
-### 6.3. Mapeo para Indico
-
-| Atributo en Midpoint (Modelo Central)    | Atributo en Indico (API) | Notas / Lógica de Mapeo                                      |
-| ---------------------------------------- | ------------------------ | ------------------------------------------------------------ |
-| `givenName` (Nativo)                     | `first_name`             | Mapeo directo.                                               |
-| `familyName` (Nativo)                    | `last_name`              | Mapeo directo.                                               |
-| `fullName` (Nativo)                      | `full_name`              | Mapeo directo.                                               |
-| `emailAddress` (Nativo)                  | `email`                  | Mapeo directo.                                               |
-| `extension/employment/affiliation`       | `affiliation`            | La afiliación principal se usa como la afiliación en Indico. |
-| `telephoneNumber` (Nativo)               | `phone`                  | Mapeo directo.                                               |
-| `jpegPhoto` (Nativo)                     | `avatar_url`             | Se podría requerir una lógica para exponer la URL de la foto. |
-| `extension/indico/indicoUserId`          | `id` / `identifier`      | Atributo específico para almacenar el ID del usuario en Indico. |
-
-### 6.4. Mapeo para DSpace / DSpace CRIS
-
-| Atributo en Midpoint (Modelo Central)                     | Atributo en DSpace/CRIS (Metadatos) | Notas / Lógica de Mapeo                                                                         |
-| --------------------------------------------------------- | ----------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `fullName` (Nativo)                                       | `dc.title`                          | El nombre completo se usa como el título del ítem de Investigador (CRIS).                         |
-| `familyName` (Nativo) + `, ` + `givenName` (Nativo)       | `dc.contributor.author`             | El nombre en formato "Apellido, Nombre" es el estándar para la autoría.                         |
-| `emailAddress` (Nativo)                                   | `eperson.email`                     | Mapeo directo al email del EPerson.                                                             |
-| `extension/personDetails/biography`                       | `dc.description.abstract`           | La biografía se puede mapear al resumen del perfil del investigador.                            |
-| `extension/academic/orcid`                                | `person.identifier.orcid`           | Mapeo al campo específico de ORCID en DSpace-CRIS.                                              |
-| `extension/academic/scopusId`                             | `person.identifier.scopus`          | Mapeo al campo específico de Scopus ID.                                                         |
-| `extension/peruStandards/renacytCode`                     | `person.identifier.renacyt`         | Campo para el código RENACYT.                                                                   |
-| `extension/peruStandards/ctiVitaeId`                      | `person.identifier.dina`            | Campo para el ID de CTI Vitae (DINA).                                                           |
-| `extension/employment/affiliation`                        | `person.affiliation`                | La afiliación principal se mapea al campo de afiliación del investigador.                       |
-| `extension/dspaceCris/crisInternalId`                     | `cris.id`                           | Atributo específico para almacenar el ID interno del objeto CRIS.                               |
-| `extension/dspaceCris/epersonId`                          | `eperson.id`                        | Atributo específico para almacenar el ID del objeto EPerson.                                    |
+<schema xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3" xmlns:c="http://midpoint.evolveum.com/xml/ns/public/common/common-3" xmlns:icfs="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/resource-schema-3" xmlns:org="http://midpoint.evolveum.com/xml/ns/public/common/org-3" xmlns:q="http://prism.evolveum.com/xml/ns/public/query-3" xmlns:ri="http://midpoint.evolveum.com/xml/ns/public/resource/instance-3" xmlns:t="http://prism.evolveum.com/xml/ns/public/types-3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" oid="b7d55017-599f-4f2f-9493-9f64bba62c5b" version="23">
+    <_metadata id="1">
+        <storage>
+            <createTimestamp>2025-06-06T16:59:14.972Z</createTimestamp>
+            <creatorRef oid="00000000-0000-0000-0000-000000000002" relation="org:default" type="c:UserType">
+                <!-- administrator -->
+            </creatorRef>
+            <createChannel>http://midpoint.evolveum.com/xml/ns/public/common/channels-3#user</createChannel>
+            <modifyTimestamp>2025-06-09T23:33:37.677Z</modifyTimestamp>
+            <modifierRef oid="00000000-0000-0000-0000-000000000002" relation="org:default" type="c:UserType">
+                <!-- administrator -->
+            </modifierRef>
+            <modifyChannel>http://midpoint.evolveum.com/xml/ns/public/common/channels-3#user</modifyChannel>
+        </storage>
+        <process>
+            <requestTimestamp>2025-06-06T16:59:14.933Z</requestTimestamp>
+            <requestorRef oid="00000000-0000-0000-0000-000000000002" relation="org:default" type="c:UserType">
+                <!-- administrator -->
+            </requestorRef>
+        </process>
+    </_metadata>
+    <name>Esquema de Extensión para Personas UPeU</name>
+    <description>Contiene el modelo de datos maestro y extendido para todos los objetos de tipo Persona en la UPeU.</description>
+    <documentation>Versión 3.0. Este esquema define la identidad digital unificada para la integración de sistemas como RRHH, portales académicos, Koha, DSpace, OJS, etc., siguiendo una arquitectura de capas y priorizando estándares. Creado por Alberto Sánchez/Automatización el 07/06/2025.</documentation>
+    <operationExecution id="9">
+        <recordType>simple</recordType>
+        <timestamp>2025-06-09T23:33:39.414Z</timestamp>
+        <operation>
+            <objectDelta>
+                <t:changeType>modify</t:changeType>
+                <t:objectType>c:SchemaType</t:objectType>
+            </objectDelta>
+            <executionResult>
+                <operation>com.evolveum.midpoint.model.impl.lens.ChangeExecutor.executeDelta</operation>
+                <status>success</status>
+                <importance>normal</importance>
+                <token>1000000000000132374</token>
+            </executionResult>
+            <objectName>Esquema de Extensión para Personas UPeU</objectName>
+        </operation>
+        <status>success</status>
+        <initiatorRef oid="00000000-0000-0000-0000-000000000002" relation="org:default" type="c:UserType">
+            <!-- administrator -->
+        </initiatorRef>
+        <channel>http://midpoint.evolveum.com/xml/ns/public/common/channels-3#user</channel>
+    </operationExecution>
+    <iteration>0</iteration>
+    <iterationToken/>
+    <definition>
+        <xsd:schema xmlns:a="http://prism.evolveum.com/xml/ns/public/annotation-3" xmlns:tns="http://crai.upeu.edu.pe/xml/ns/midpoint/extension/person/v1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" targetNamespace="http://crai.upeu.edu.pe/xml/ns/midpoint/extension/person/v1" xml:space="preserve">
+            <xsd:annotation>
+                <xsd:appinfo>
+                    <a:defaultPrefix>upeuPerson</a:defaultPrefix>
+                </xsd:appinfo>
+            </xsd:annotation>
+            <xsd:import namespace="http://prism.evolveum.com/xml/ns/public/annotation-3"/>
+            <xsd:complexType name="personDetails">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:extension ref="c:UserType"/>
+                    </xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="birthPlace" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Lugar de Nacimiento</a:displayName>
+                                <a:displayOrder>220</a:displayOrder>
+                                <a:help>Corresponde a schema.org/birthPlace.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="gender" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Género</a:displayName>
+                                <a:displayOrder>230</a:displayOrder>
+                                <a:help>Corresponde a schema.org/gender.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="nationality" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Nacionalidad</a:displayName>
+                                <a:displayOrder>240</a:displayOrder>
+                                <a:help>Corresponde a schema.org/nationality.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="pronouns" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Pronombres</a:displayName>
+                                <a:displayOrder>250</a:displayOrder>
+                                <a:help>Pronombres personales (ej: 'ella', 'él', 'elle'). Corresponde a schema.org/pronouns.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="url" type="xsd:anyURI">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Páginas Web Personales</a:displayName>
+                                <a:displayOrder>260</a:displayOrder>
+                                <a:help>URLs de páginas personales o perfiles (blog, LinkedIn, etc.). Corresponde a schema.org/url.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="biography" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Biografía</a:displayName>
+                                <a:displayOrder>270</a:displayOrder>
+                                <a:help>Una breve biografía o resumen profesional. Se mapea a 'biography' de OJS. Análogo a schema.org/description.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="birthDate" type="xsd:dateTime">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Fecha de Nacimiento</a:displayName>
+                                <a:displayOrder>211</a:displayOrder>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="peruStandards">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:extension ref="c:UserType"/>
+                    </xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="renacytCode" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Código RENACYT</a:displayName>
+                                <a:displayOrder>510</a:displayOrder>
+                                <a:help>Código del Registro Nacional de Ciencia, Tecnología e Innovación Tecnológica (Reglamento de Calificación, Clasificación y Registro de los Investigadores).</a:help>
+                                <a:indexed>true</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="ctiVitaeId" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>ID CTI Vitae (DINA)</a:displayName>
+                                <a:displayOrder>520</a:displayOrder>
+                                <a:help>Identificador de la hoja de vida del investigador en la plataforma DINA/PeruCRIS de CONCYTEC.</a:help>
+                                <a:indexed>true</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="identity">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:extension ref="c:UserType"/>
+                    </xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="taxId" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>DNI / ID Fiscal</a:displayName>
+                                <a:displayOrder>110</a:displayOrder>
+                                <a:help>Documento Nacional de Identidad o identificador fiscal. Corresponde a schema.org/taxID.</a:help>
+                                <a:indexed>true</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="universityIdCard" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Carnet Universitario (Oficial)</a:displayName>
+                                <a:displayOrder>120</a:displayOrder>
+                                <a:help>Número del carnet universitario oficial, regulado por la entidad gubernamental (p.ej. SUNEDU en Perú).</a:help>
+                                <a:indexed>true</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="institutionalIdCard" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Tarjeta de Identificación (Institucional)</a:displayName>
+                                <a:displayOrder>130</a:displayOrder>
+                                <a:help>Número del ID Card emitido por la propia UPeU para servicios internos (biblioteca, acceso, etc.). Se mapea a 'cardnumber' de Koha.</a:help>
+                                <a:indexed>true</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="alternateName" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Nombres Alternativos</a:displayName>
+                                <a:displayOrder>140</a:displayOrder>
+                                <a:help>Otros nombres, alias o nombre de casada/o. Corresponde a schema.org/alternateName.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="sameAs" type="xsd:anyURI">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Perfiles Externos (sameAs)</a:displayName>
+                                <a:displayOrder>150</a:displayOrder>
+                                <a:help>URL a páginas de referencia que identifican a la persona (Wikipedia, Wikidata, etc.). Corresponde a schema.org/sameAs.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="academic">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:extension ref="c:UserType"/>
+                    </xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="orcid" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Identificador ORCID</a:displayName>
+                                <a:displayOrder>410</a:displayOrder>
+                                <a:help>Estándar global para identificación de autores. Usado en OJS, DSpace, PeruCRIS.</a:help>
+                                <a:indexed>true</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="scopusId" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Identificador Scopus</a:displayName>
+                                <a:displayOrder>420</a:displayOrder>
+                                <a:indexed>true</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="researcherId" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>ID de Researcher (Wos/Publons)</a:displayName>
+                                <a:displayOrder>430</a:displayOrder>
+                                <a:indexed>true</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="googleScholarId" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>ID de Google Scholar</a:displayName>
+                                <a:displayOrder>440</a:displayOrder>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="hasCredential" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Credenciales Educativas/Profesionales</a:displayName>
+                                <a:displayOrder>450</a:displayOrder>
+                                <a:help>Certificaciones, licencias, grados obtenidos. Corresponde a schema.org/hasCredential.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="award" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Premios y Reconocimientos</a:displayName>
+                                <a:displayOrder>460</a:displayOrder>
+                                <a:help>Premios o reconocimientos recibidos. Corresponde a schema.org/award.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="interests" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Áreas de Interés</a:displayName>
+                                <a:displayOrder>470</a:displayOrder>
+                                <a:help>Lista de intereses de investigación o académicos. Corresponde al atributo 'interests' de OJS.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="skills" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Habilidades y Competencias</a:displayName>
+                                <a:displayOrder>480</a:displayOrder>
+                                <a:help>Habilidades declaradas por la persona. Corresponde a schema.org/skills.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="dspaceCris">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:extension ref="c:UserType"/>
+                    </xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="crisInternalId" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>ID Interno CRIS</a:displayName>
+                                <a:displayOrder>910</a:displayOrder>
+                                <a:help>El ID interno del perfil de investigador en el sistema CRIS.</a:help>
+                                <a:indexed>true</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="epersonId" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>ID de EPerson (DSpace)</a:displayName>
+                                <a:displayOrder>920</a:displayOrder>
+                                <a:help>El ID del objeto EPerson en DSpace.</a:help>
+                                <a:indexed>true</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="ojs">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:extension ref="c:UserType"/>
+                    </xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="userRole" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Rol de Usuario (OJS)</a:displayName>
+                                <a:displayOrder>810</a:displayOrder>
+                                <a:help>Roles que el usuario tiene en OJS, como 'Author', 'Reviewer', 'Editor'. Se mapea al array 'groups' de OJS.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="gossip" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Notas Privadas (OJS)</a:displayName>
+                                <a:displayOrder>820</a:displayOrder>
+                                <a:help>Campo de notas privadas del perfil de usuario en OJS.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="signature" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Firma (OJS)</a:displayName>
+                                <a:displayOrder>830</a:displayOrder>
+                                <a:help>Firma de correo electrónico del usuario en OJS.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="preferredPublicName" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Nombre Público Preferido (OJS)</a:displayName>
+                                <a:displayOrder>840</a:displayOrder>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="employment">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:extension ref="c:UserType"/>
+                    </xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="affiliation" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Afiliación Principal</a:displayName>
+                                <a:displayOrder>310</a:displayOrder>
+                                <a:help>La organización/facultad principal a la que la persona está afiliada (ej: 'Facultad de Ingeniería'). Corresponde a schema.org/affiliation y se usa en Indico, OJS, etc.</a:help>
+                                <a:indexed>true</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="alumniOf" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Egresado de</a:displayName>
+                                <a:displayOrder>320</a:displayOrder>
+                                <a:help>Organizaciones de las que la persona es egresada. Corresponde a schema.org/alumniOf.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="hasOccupation" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Ocupación/Profesión</a:displayName>
+                                <a:displayOrder>330</a:displayOrder>
+                                <a:help>Ocupación o profesión de la persona (ej: 'Bibliotecólogo'). Corresponde a schema.org/hasOccupation.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element maxOccurs="unbounded" minOccurs="0" name="worksFor" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Colabora con</a:displayName>
+                                <a:displayOrder>340</a:displayOrder>
+                                <a:help>Otras organizaciones para las que trabaja o colabora. Corresponde a schema.org/worksFor.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="contractStartDate" type="xsd:dateTime">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Fecha de Inicio de Contrato</a:displayName>
+                                <a:displayOrder>350</a:displayOrder>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="contractEndDate" type="xsd:dateTime">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Fecha de Fin de Contrato</a:displayName>
+                                <a:displayOrder>360</a:displayOrder>
+                                <a:help>Se puede mapear al 'expiry_date' de Koha.</a:help>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="koha">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:extension ref="c:UserType"/>
+                    </xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="branchCode" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Código de Sede (Koha)</a:displayName>
+                                <a:displayOrder>710</a:displayOrder>
+                                <a:help>Identificador de la biblioteca o sede a la que pertenece el usuario en Koha. Se mapea al campo 'library_id'.</a:help>
+                                <a:indexed>true</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="categoryId" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>ID de Categoría (Koha)</a:displayName>
+                                <a:displayOrder>720</a:displayOrder>
+                                <a:help>Identificador de la categoría de usuario en Koha (ej: 'DOCEN', 'EST'). Se mapea al campo 'category_id'.</a:help>
+                                <a:indexed>true</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="staffNotes" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Notas de Personal (Koha)</a:displayName>
+                                <a:displayOrder>730</a:displayOrder>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="opacNotes" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Notas de OPAC (Koha)</a:displayName>
+                                <a:displayOrder>740</a:displayOrder>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="smsNumber" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>Número SMS (Koha)</a:displayName>
+                                <a:displayOrder>750</a:displayOrder>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+            <xsd:complexType name="indico">
+                <xsd:annotation>
+                    <xsd:appinfo>
+                        <a:extension ref="c:UserType"/>
+                    </xsd:appinfo>
+                </xsd:annotation>
+                <xsd:sequence>
+                    <xsd:element minOccurs="0" name="indicoUserId" type="xsd:string">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>ID de Usuario (Indico)</a:displayName>
+                                <a:displayOrder>1010</a:displayOrder>
+                                <a:indexed>true</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                    <xsd:element minOccurs="0" name="avatarUrl" type="xsd:anyURI">
+                        <xsd:annotation>
+                            <xsd:appinfo>
+                                <a:displayName>URL del Avatar (Indico)</a:displayName>
+                                <a:displayOrder>1020</a:displayOrder>
+                                <a:indexed>false</a:indexed>
+                            </xsd:appinfo>
+                        </xsd:annotation>
+                    </xsd:element>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </definition>
+</schema>
