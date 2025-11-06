@@ -1,0 +1,20 @@
+<resource xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
+          xmlns:icfc="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/connector-schema-3"
+          oid="6c1e920c-da75-4800-90c1-ab22be5c8cdc">
+    <name>UPEU-EntraID-Graph</name>
+    <displayName>Microsoft Entra ID (Graph API)</displayName>
+    <description>Esqueleto de recurso para Entra ID usando Graph API. <!-- TODO: registrar aplicación y permisos -->
+    </description>
+    <connectorRef oid="{{OID_ENTRA_CONNECTOR}}" type="ConnectorType"/>
+    <connectorConfiguration>
+        <!-- TODO: completar clientId, tenantId y secrets -->
+        <icfc:configurationProperties>
+            <clientId>{{ENTRA_CLIENT_ID}}</clientId>
+            <tenantId>{{ENTRA_TENANT_ID}}</tenantId>
+            <clientSecret>{{SECRET}}</clientSecret>
+            <authority>{{ENTRA_AUTHORITY}}</authority>
+            <scope>{{ENTRA_SCOPE}}</scope>
+        </icfc:configurationProperties>
+    </connectorConfiguration>
+    <!-- TODO: definir schemaHandling para cuentas y grupos una vez que se habiliten permisos -->
+</resource>

@@ -1,0 +1,7 @@
+<archetype xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3" oid="57df3e37-a749-4296-bb04-efc206209896">
+    <name>ProfessorType</name>
+    <displayName>Docente</displayName>
+    <description>Arquetipo base para docentes. <!-- TODO: ajustar atributos adicionales --></description>
+    <archetypeType>user</archetypeType>
+    <applicableTemplateRef oid="{{OID_USER_TEMPLATE}}" type="ObjectTemplateType"/>
+</archetype>

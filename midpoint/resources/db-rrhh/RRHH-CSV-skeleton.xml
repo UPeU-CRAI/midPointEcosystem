@@ -1,0 +1,16 @@
+<resource xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
+          xmlns:icfc="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/connector-schema-3"
+          oid="d6caa9d2-8034-423a-9f61-bb3c4990b7b9">
+    <name>RRHH-CSV</name>
+    <displayName>RR.HH. CSV (Pendiente)</displayName>
+    <description>Esqueleto de recurso CSV para datos de Recursos Humanos. <!-- TODO: completar mapeos y ruta -->
+    </description>
+    <connectorRef oid="00000000-0000-0000-0000-000000000105" type="ConnectorType"/>
+    <connectorConfiguration>
+        <icfc:configurationProperties>
+            <filePath>{{CSV_RRHH_PATH}}</filePath>
+            <firstLineIsHeader>true</firstLineIsHeader>
+        </icfc:configurationProperties>
+    </connectorConfiguration>
+    <!-- TODO: definir schemaHandling e inbound mappings cuando se disponga del layout definitivo -->
+</resource>
