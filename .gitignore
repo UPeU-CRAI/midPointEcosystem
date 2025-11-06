@@ -1,3 +1,95 @@
 .DS_Store
-# Infraestructura de despliegue (no versionar)
+# ============================================
+# 🧩 UPeU - MidPoint Ecosystem .gitignore
+# ============================================
+
+# --- Infraestructura / despliegues ---
 midpoint-docker/
+archive/infra/freeradius-server/.git/
+archive/infra/**/tmp/
+archive/infra/**/logs/
+archive/infra/**/build/
+archive/infra/**/dist/
+archive/infra/**/target/
+archive/infra/**/.gradle/
+archive/infra/**/.vscode/
+
+# --- Archivos generados por Docker ---
+**/docker-compose.override.yml
+**/docker-compose.local.yml
+**/.env
+**/.env.*
+**/container_logs/
+**/compose-cache/
+
+# --- MidPoint Studio / IDEs ---
+.idea/
+.vscode/
+*.iml
+*.class
+*.project
+*.settings/
+*.classpath
+*.factorypath
+*.log
+*.bak
+*.tmp
+*.swp
+
+# --- Simulaciones y auditorías temporales ---
+midpoint/simulations/*.out
+midpoint/simulations/*.log
+midpoint/simulations/*.csv
+midpoint/simulations/tmp/
+midpoint/tasks/tmp/
+midpoint/tmp/
+**/audit-export/
+**/simulation-output/
+
+# --- Archivos de backup de configuración ---
+*.orig
+*.rej
+*.bak
+*.backup
+*~
+
+# --- Archivos de sistema ---
+.DS_Store
+Thumbs.db
+desktop.ini
+ehthumbs.db
+
+# --- Python, Node, otros toolings locales ---
+__pycache__/
+*.pyc
+node_modules/
+.envrc
+.venv/
+venv/
+npm-debug.log*
+yarn-error.log*
+
+# --- Reportes y exportaciones ---
+reports/
+logs/
+output/
+export/
+*.pdf
+*.xlsx
+*.csv
+!datasets/csv/*.csv  # except dataset sources
+
+# --- Seguridad / secretos ---
+secrets/
+**/config/secrets/
+**/keys/
+*.pem
+*.key
+*.crt
+*.p12
+*.jks
+
+# --- Git internals no deseados ---
+*.patch
+*.diff
+
