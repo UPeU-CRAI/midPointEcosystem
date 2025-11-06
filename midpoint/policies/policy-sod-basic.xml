@@ -1,0 +1,18 @@
+<objects xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3">
+  <policy oid="00000000-0000-0000-0000-000000pol-sod">
+    <name>UPeU Policy - SoD Payroll</name>
+    <policyRule>
+      <name>Segregación de Deberes Nómina</name>
+      <policyConstraints>
+        <exclusion>
+          <targetRef oid="00000000-0000-0000-0000-000000rol-prepaga" type="RoleType"/>
+          <conflictingTargetRef oid="00000000-0000-0000-0000-000000rol-aprueba" type="RoleType"/>
+        </exclusion>
+      </policyConstraints>
+      <policyActions>
+        <record>true</record>
+        <enforcement>enforce</enforcement>
+      </policyActions>
+    </policyRule>
+  </policy>
+</objects>

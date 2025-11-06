@@ -1,22 +1,21 @@
 <task xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
       oid="66f29f8e-e2c1-4759-8a78-4656d7c381f9">
-    <name>Import SIS Simulation</name>
+    <name>Import SIS CSV (SIMULATION)</name>
     <description>Ejecuta importación desde SIS en modo simulación completa.</description>
-    <executionStatus>waiting</executionStatus>
+    <executionStatus>runnable</executionStatus>
     <binding>loose</binding>
-    <schedule>
-        <enabled>false</enabled>
-    </schedule>
+    <category>IMPORT</category>
+    <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/task/import/handler-3</handlerUri>
+    <objectRef oid="{{OID_RESOURCE_SIS_CSV}}" type="ResourceType"/>
     <activity>
         <work>
             <import>
-                <resourceRef oid="ff9318cb-2b57-42d1-ab2e-c3a103070417" type="ResourceType"/>
                 <kind>account</kind>
                 <intent>default</intent>
-                <options>
-                    <simulationMode>full</simulationMode>
-                </options>
             </import>
         </work>
     </activity>
+    <activityState>
+        <simulationMode>full</simulationMode>
+    </activityState>
 </task>

@@ -12,5 +12,11 @@
             <firstLineIsHeader>true</firstLineIsHeader>
         </icfc:configurationProperties>
     </connectorConfiguration>
-    <!-- TODO: completar mappings inbound/outbound -->
+    <schemaHandling>
+        <objectType>
+            <!-- TODO: Map inbound: givenName -> $user/givenName; familyName -> $user/familyName; email -> $user/emailAddress -->
+            <!-- TODO: Correlation order: 1) employeeId (extension/employeeId), 2) emailAddress -->
+            <!-- TODO: Synchronization: unlinked -> addUser (simulation primero) -->
+        </objectType>
+    </schemaHandling>
 </resource>

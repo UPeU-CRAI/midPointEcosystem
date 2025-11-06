@@ -1,0 +1,17 @@
+<objects xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3">
+  <dashboard oid="00000000-0000-0000-0000-000000dash-main">
+    <name>UPeU - Operación IGA</name>
+    <widget>
+      <name>Usuarios por Arquetipo</name>
+      <collectionRef type="ArchetypeType"/>
+    </widget>
+    <widget>
+      <name>Estados de Tareas</name>
+      <taskDashboard>true</taskDashboard>
+    </widget>
+    <widget>
+      <name>Salud de Recursos</name>
+      <resourceHealth>true</resourceHealth>
+    </widget>
+  </dashboard>
+</objects>
