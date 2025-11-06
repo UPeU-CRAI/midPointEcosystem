@@ -1,0 +1,6 @@
+<org xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3" oid="1719a0bc-ee80-4128-bd0e-5f3c41b4501d">
+    <name>UPeU</name>
+    <displayName>Universidad Peruana Unión</displayName>
+    <description>Organización raíz para el modelo de jerarquía de la UPeU.</description>
+    <!-- TODO: añadir RR.HH., Vigilancia, Infraestructura, etc. -->
+</org>

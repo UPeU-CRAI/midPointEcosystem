@@ -1,0 +1,22 @@
+<task xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
+      oid="f5605b40-c744-42df-bdc6-01e12daf00c5">
+    <name>Reconcile SIS Simulation</name>
+    <description>Reconciliación del recurso SIS en modo simulación.</description>
+    <executionStatus>waiting</executionStatus>
+    <binding>loose</binding>
+    <schedule>
+        <enabled>false</enabled>
+    </schedule>
+    <activity>
+        <work>
+            <reconciliation>
+                <resourceRef oid="ff9318cb-2b57-42d1-ab2e-c3a103070417" type="ResourceType"/>
+                <kind>account</kind>
+                <intent>default</intent>
+                <options>
+                    <simulationMode>full</simulationMode>
+                </options>
+            </reconciliation>
+        </work>
+    </activity>
+</task>

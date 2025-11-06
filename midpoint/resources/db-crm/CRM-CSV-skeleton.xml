@@ -1,0 +1,16 @@
+<resource xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
+          xmlns:icfc="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/connector-schema-3"
+          oid="cac79ccc-81eb-4c87-ae7a-552e393c4819">
+    <name>CRM-CSV</name>
+    <displayName>CRM CSV (Pendiente)</displayName>
+    <description>Esqueleto de recurso CSV para datos CRM. <!-- TODO: definir columnas y correlaciones -->
+    </description>
+    <connectorRef oid="00000000-0000-0000-0000-000000000105" type="ConnectorType"/>
+    <connectorConfiguration>
+        <icfc:configurationProperties>
+            <filePath>{{CSV_CRM_PATH}}</filePath>
+            <firstLineIsHeader>true</firstLineIsHeader>
+        </icfc:configurationProperties>
+    </connectorConfiguration>
+    <!-- TODO: completar mappings inbound/outbound -->
+</resource>
