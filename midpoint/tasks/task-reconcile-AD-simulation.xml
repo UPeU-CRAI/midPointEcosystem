@@ -1,0 +1,22 @@
+<task xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
+      oid="476df733-378d-45bf-97ac-e93eb5a0418d">
+    <name>Reconcile AD Simulation</name>
+    <description>Reconciliación del recurso Active Directory en modo simulación.</description>
+    <executionStatus>waiting</executionStatus>
+    <binding>loose</binding>
+    <schedule>
+        <enabled>false</enabled>
+    </schedule>
+    <activity>
+        <work>
+            <reconciliation>
+                <resourceRef oid="a77b4f62-d30e-4368-bb3a-2863a8d2791f" type="ResourceType"/>
+                <kind>account</kind>
+                <intent>default</intent>
+                <options>
+                    <simulationMode>full</simulationMode>
+                </options>
+            </reconciliation>
+        </work>
+    </activity>
+</task>

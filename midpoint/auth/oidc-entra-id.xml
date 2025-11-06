@@ -1,0 +1,25 @@
+<securityPolicy xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3" oid="dbaba665-7f54-4813-a8ff-6cbf73de6830">
+    <name>GUI-OIDC-EntraID</name>
+    <description>Política de autenticación OIDC para la GUI de midPoint integrada con Entra ID. <!-- TODO: validar endpoints del tenant -->
+    </description>
+    <authentication>
+        <modules>
+            <oidc>
+                <identifier>entra-oidc</identifier>
+                <clientId>{{ENTRA_CLIENT_ID}}</clientId>
+                <clientSecret>{{SECRET}}</clientSecret>
+                <issuerUri>{{ENTRA_ISSUER_URI}}</issuerUri>
+                <authorizationEndpoint>{{ENTRA_AUTHORIZATION_ENDPOINT}}</authorizationEndpoint>
+                <tokenEndpoint>{{ENTRA_TOKEN_ENDPOINT}}</tokenEndpoint>
+                <userinfoEndpoint>{{ENTRA_USERINFO_ENDPOINT}}</userinfoEndpoint>
+                <endSessionEndpoint>{{ENTRA_END_SESSION_ENDPOINT}}</endSessionEndpoint>
+                <scope>openid profile email</scope>
+                <redirectUrl>{{MIDPOINT_OIDC_REDIRECT_URI}}</redirectUrl>
+                <logout>
+                    <useIdTokenHint>true</useIdTokenHint>
+                    <!-- TODO: ajustar parámetro id_token_hint según configuración de la app -->
+                </logout>
+            </oidc>
+        </modules>
+    </authentication>
+</securityPolicy>

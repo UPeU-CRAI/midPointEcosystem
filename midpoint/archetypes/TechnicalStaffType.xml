@@ -1,0 +1,7 @@
+<archetype xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3" oid="80133ef5-0e5a-46cc-bd12-0397fc5b8d1c">
+    <name>TechnicalStaffType</name>
+    <displayName>Personal Técnico</displayName>
+    <description>Arquetipo para personal técnico especializado. <!-- TODO: ajustar atributos adicionales --></description>
+    <archetypeType>user</archetypeType>
+    <applicableTemplateRef oid="{{OID_USER_TEMPLATE}}" type="ObjectTemplateType"/>
+</archetype>

@@ -1,0 +1,127 @@
+<resource xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
+          xmlns:ri="http://midpoint.evolveum.com/xml/ns/public/resource/instance-3"
+          xmlns:icfc="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/connector-schema-3"
+          oid="ff9318cb-2b57-42d1-ab2e-c3a103070417">
+    <name>SIS-CSV</name>
+    <displayName>SIS CSV Authoritative Source</displayName>
+    <description>Fuente autoritativa inicial basada en CSV exportado del SIS. <!-- TODO: actualizar ruta de archivo -->
+    </description>
+    <connectorRef oid="00000000-0000-0000-0000-000000000105" type="ConnectorType">
+        <filter>
+            <equal>
+                <path>c:connectorType</path>
+                <value>com.evolveum.polygon.connector.csv.CsvConnector</value>
+            </equal>
+        </filter>
+    </connectorRef>
+    <connectorConfiguration>
+        <icfc:configurationProperties>
+            <filePath>{{CSV_SIS_PATH}}</filePath>
+            <encoding>UTF-8</encoding>
+            <fieldDelimiter>,</fieldDelimiter>
+            <quoteMode>DEFAULT</quoteMode>
+            <firstLineIsHeader>true</firstLineIsHeader>
+            <multivalueDelimiter>|</multivalueDelimiter>
+        </icfc:configurationProperties>
+    </connectorConfiguration>
+    <schemaHandling>
+        <objectType>
+            <kind>account</kind>
+            <intent>default</intent>
+            <displayName>Registro SIS</displayName>
+            <default>true</default>
+            <attribute>
+                <ref>ri:givenName</ref>
+                <inbound>
+                    <strength>strong</strength>
+                    <expression>
+                        <path>c:givenName</path>
+                    </expression>
+                </inbound>
+            </attribute>
+            <attribute>
+                <ref>ri:familyName</ref>
+                <inbound>
+                    <strength>strong</strength>
+                    <expression>
+                        <path>c:familyName</path>
+                    </expression>
+                </inbound>
+            </attribute>
+            <attribute>
+                <ref>ri:email</ref>
+                <inbound>
+                    <strength>strong</strength>
+                    <expression>
+                        <path>c:emailAddress</path>
+                    </expression>
+                </inbound>
+            </attribute>
+            <attribute>
+                <ref>ri:uid</ref>
+                <inbound>
+                    <strength>strong</strength>
+                    <expression>
+                        <path>c:extension/sisId</path>
+                    </expression>
+                </inbound>
+            </attribute>
+            <attribute>
+                <ref>ri:archetype</ref>
+                <inbound>
+                    <strength>strong</strength>
+                    <expression>
+                        <script>
+                            <code><![CDATA[
+if (input == null) {
+    return null;
+}
+// TODO: ajustar catálogo de tipos según valores reales del SIS
+switch (input.trim()) {
+    case "StudentType":
+        return midpoint.createObjectRef("069a118b-9317-4ca2-a4e0-7be90b1d11f8", "ArchetypeType");
+    case "ProfessorType":
+        return midpoint.createObjectRef("57df3e37-a749-4296-bb04-efc206209896", "ArchetypeType");
+    case "AdministrativeStaffType":
+        return midpoint.createObjectRef("e47dbc5a-3b6f-4c1e-8b5e-6158d60eef3d", "ArchetypeType");
+    case "TechnicalStaffType":
+        return midpoint.createObjectRef("80133ef5-0e5a-46cc-bd12-0397fc5b8d1c", "ArchetypeType");
+    default:
+        return null;
+}
+                            ]]></code>
+                        </script>
+                    </expression>
+                </inbound>
+                <exclusive>true</exclusive>
+            </attribute>
+            <attribute>
+                <ref>ri:orgCode</ref>
+                <inbound>
+                    <strength>weak</strength>
+                    <expression>
+                        <path>c:extension/orgCode</path>
+                    </expression>
+                </inbound>
+            </attribute>
+        </objectType>
+    </schemaHandling>
+    <synchronization>
+        <correlation>
+            <correlators>
+                <item>
+                    <ref>c:extension/sisId</ref>
+                </item>
+                <item>
+                    <ref>c:emailAddress</ref>
+                </item>
+            </correlators>
+        </correlation>
+        <reaction>
+            <situation>unlinked</situation>
+            <action>
+                <handlerUri>http://midpoint.evolveum.com/xml/ns/public/model/action-3#addUser</handlerUri>
+            </action>
+        </reaction>
+    </synchronization>
+</resource>

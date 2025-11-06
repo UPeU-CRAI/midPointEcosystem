@@ -1,0 +1,5 @@
+<org xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3" oid="9af60cf0-0109-49b4-a6c7-ec5f5e4bf2c4">
+    <name>AreaTecnologia</name>
+    <displayName>Área de Tecnología</displayName>
+    <parentRef oid="1719a0bc-ee80-4128-bd0e-5f3c41b4501d" type="OrgType" relation="org:default"/>
+</org>
