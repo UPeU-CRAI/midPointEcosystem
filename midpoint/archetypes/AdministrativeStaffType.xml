@@ -1,0 +1,7 @@
+<archetype xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3" oid="e47dbc5a-3b6f-4c1e-8b5e-6158d60eef3d">
+    <name>AdministrativeStaffType</name>
+    <displayName>Personal Administrativo</displayName>
+    <description>Arquetipo para personal administrativo. <!-- TODO: ajustar atributos adicionales --></description>
+    <archetypeType>user</archetypeType>
+    <applicableTemplateRef oid="{{OID_USER_TEMPLATE}}" type="ObjectTemplateType"/>
+</archetype>

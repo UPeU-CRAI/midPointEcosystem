@@ -1,0 +1,3 @@
+employeeId,givenName,familyName,email,positionCode,status
+9001,Ana,López,ana.lopez@upeu.edu.pe,ADM-001,ACTIVE
+9002,Pedro,Gutiérrez,pedro.gutierrez@upeu.edu.pe,TEC-010,INACTIVE

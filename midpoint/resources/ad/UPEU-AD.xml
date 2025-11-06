@@ -1,0 +1,125 @@
+<resource xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3"
+          xmlns:ri="http://midpoint.evolveum.com/xml/ns/public/resource/instance-3"
+          xmlns:icfs="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/resource-schema-3"
+          xmlns:icfc="http://midpoint.evolveum.com/xml/ns/public/connector/icf-1/connector-schema-3"
+          oid="a77b4f62-d30e-4368-bb3a-2863a8d2791f">
+    <name>UPEU-AD</name>
+    <displayName>Active Directory - UPeU</displayName>
+    <description>Recurso destino fuerte para cuentas en Active Directory. <!-- TODO: ajustar parámetros de conexión --></description>
+    <connectorRef oid="00000000-0000-0000-0000-000000000003" type="ConnectorType">
+        <filter>
+            <equal>
+                <path>c:connectorType</path>
+                <value>com.evolveum.polygon.connector.ldap.LdapConnector</value>
+            </equal>
+        </filter>
+    </connectorRef>
+    <connectorConfiguration>
+        <icfc:configurationProperties>
+            <host>{{AD_HOSTNAME}}</host>
+            <port>{{AD_PORT}}</port>
+            <baseContext>{{AD_BASE_DN}}</baseContext>
+            <bindDn>{{AD_BIND_DN}}</bindDn>
+            <bindPassword>{{SECRET}}</bindPassword>
+            <useTls>true</useTls>
+        </icfc:configurationProperties>
+    </connectorConfiguration>
+    <schemaHandling>
+        <objectType>
+            <kind>account</kind>
+            <intent>default</intent>
+            <displayName>Cuenta AD</displayName>
+            <default>true</default>
+            <attribute>
+                <ref>ri:cn</ref>
+                <outbound>
+                    <strength>strong</strength>
+                    <expression>
+                        <script>
+                            <code><![CDATA[
+return user.fullName != null ? user.fullName : user.name;
+                            ]]></code>
+                        </script>
+                    </expression>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:sAMAccountName</ref>
+                <outbound>
+                    <strength>strong</strength>
+                    <expression>
+                        <script>
+                            <code><![CDATA[
+return user.name;
+                            ]]></code>
+                        </script>
+                    </expression>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:userPrincipalName</ref>
+                <outbound>
+                    <strength>strong</strength>
+                    <expression>
+                        <script>
+                            <code><![CDATA[
+if (user.name == null) {
+    return null;
+}
+return user.name + "@upeu.edu.pe"; // TODO: confirmar dominio UPN
+                            ]]></code>
+                        </script>
+                    </expression>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:mail</ref>
+                <outbound>
+                    <strength>strong</strength>
+                    <expression>
+                        <path>c:emailAddress</path>
+                    </expression>
+                </outbound>
+            </attribute>
+            <attribute>
+                <ref>ri:ou</ref>
+                <outbound>
+                    <strength>strong</strength>
+                    <expression>
+                        <script>
+                            <code><![CDATA[
+// TODO: ajustar nombres de OU finales
+if (user.archetypeRef == null) {
+    return "OU=General,OU=Accounts,DC=upeu,DC=edu,DC=pe";
+}
+
+def archetypeOids = user.archetypeRef.collect { it.oid }
+if (archetypeOids.contains("069a118b-9317-4ca2-a4e0-7be90b1d11f8")) {
+    return "OU=Students,OU=Accounts,DC=upeu,DC=edu,DC=pe";
+}
+if (archetypeOids.contains("57df3e37-a749-4296-bb04-efc206209896")) {
+    return "OU=Professors,OU=Accounts,DC=upeu,DC=edu,DC=pe";
+}
+return "OU=Staff,OU=Accounts,DC=upeu,DC=edu,DC=pe";
+                            ]]></code>
+                        </script>
+                    </expression>
+                </outbound>
+            </attribute>
+            <association>
+                <ref>ri:group</ref>
+                <kind>entitlement</kind>
+                <intent>group</intent>
+                <outbound>
+                    <strength>weak</strength>
+                    <expression>
+                        <asIs/>
+                    </expression>
+                </outbound>
+                <value>
+                    <referentialIntegrity>true</referentialIntegrity>
+                </value>
+            </association>
+        </objectType>
+    </schemaHandling>
+</resource>

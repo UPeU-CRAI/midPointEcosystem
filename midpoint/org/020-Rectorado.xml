@@ -1,0 +1,5 @@
+<org xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3" oid="a2d1f6fa-cef6-4431-b880-7a44b4daf394">
+    <name>Rectorado</name>
+    <displayName>Rectorado</displayName>
+    <parentRef oid="1719a0bc-ee80-4128-bd0e-5f3c41b4501d" type="OrgType" relation="org:default"/>
+</org>

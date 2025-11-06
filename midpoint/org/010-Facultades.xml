@@ -1,0 +1,5 @@
+<org xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3" oid="3cf517c2-77f2-48ad-b403-5e5d34ddc783">
+    <name>Facultades</name>
+    <displayName>Facultades</displayName>
+    <parentRef oid="1719a0bc-ee80-4128-bd0e-5f3c41b4501d" type="OrgType" relation="org:default"/>
+</org>

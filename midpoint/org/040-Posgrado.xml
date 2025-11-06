@@ -1,0 +1,5 @@
+<org xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3" oid="8352387d-d12c-4ef1-827d-91ee637c2476">
+    <name>Posgrado</name>
+    <displayName>Posgrado</displayName>
+    <parentRef oid="1719a0bc-ee80-4128-bd0e-5f3c41b4501d" type="OrgType" relation="org:default"/>
+</org>
