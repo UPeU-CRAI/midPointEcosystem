@@ -11,6 +11,21 @@
 3. Actualizar el recurso `SIS-CSV` (`/midpoint/resources/db-sis/SIS-CSV.xml`) para que `<filePath>` apunte a `/opt/midpoint/var/datasets/sis-sample.csv`. <!-- TODO: parametrizar ruta en despliegue GitOps -->
 4. Configurar secretos (`{{SECRET}}`) mediante variables de entorno o vault antes de importar.
 
+## Logout OIDC (Entra ID)
+
+- Configurar el `endSessionEndpoint` publicado por Entra ID en el cliente OIDC de midPoint para permitir cierres de sesión controlados.
+- Algunos flujos de OpenID Connect requieren enviar `id_token_hint` al invocar el endpoint de logout. Si Entra ID lo exige en tu tenant, pasa el `id_token` vigente en ese parámetro para garantizar un cierre limpio sin sesiones huérfanas.
+
+## Montaje CSV en Docker (ejemplo)
+
+```bash
+# Montar datasets en contenedor MidPoint
+docker run -d --name mp \
+  -v $(pwd)/datasets/csv:/opt/midpoint/datasets/csv \
+  -p 8080:8080 evolveum/midpoint:4.9-alpine
+# Ajustar la ruta del conector CSV a /opt/midpoint/datasets/csv/sis-sample.csv
+```
+
 ## Importación de Objetos
 
 - Desde MidPoint Studio ejecutar "Import Project Objects" para cargar `/midpoint/**/*`.

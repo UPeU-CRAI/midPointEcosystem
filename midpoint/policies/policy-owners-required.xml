@@ -1,0 +1,18 @@
+<objects xmlns="http://midpoint.evolveum.com/xml/ns/public/common/common-3">
+  <policy oid="00000000-0000-0000-0000-000000pol-owners">
+    <name>UPeU Policy - Owners Required</name>
+    <policyRule>
+      <name>Owners for critical objects</name>
+      <policyConstraints>
+        <objectOwnership>
+          <ownerRequired>true</ownerRequired>
+          <applicableType>http://midpoint.evolveum.com/xml/ns/public/common/common-3#RoleType</applicableType>
+        </objectOwnership>
+      </policyConstraints>
+      <policyActions>
+        <record>true</record>
+        <enforcement>enforce</enforcement>
+      </policyActions>
+    </policyRule>
+  </policy>
+</objects>
